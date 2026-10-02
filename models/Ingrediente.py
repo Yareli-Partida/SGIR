@@ -1,4 +1,7 @@
 class Ingrediente:
+    KG = 'kg'
+
+
     def __init__(self, id, nombre, cantidad, unidad_medida):
         self._id = id
         self._nombre = nombre
@@ -16,7 +19,3 @@ class Ingrediente:
     @property
     def unidad_medida(self):
         return self._unidad_medida
-
-
-    
-
