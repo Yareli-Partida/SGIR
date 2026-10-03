@@ -1,0 +1,29 @@
+* {
+    font-family: "Arial";
+    background-color: #FFFFFF;
+    color: #1E1E1E;
+}
+
+QToolBar > * {
+    margin: 0.5em;
+    text-align: left;
+}
+
+QToolBar > QLabel {
+    font-weight: bold;
+    border: none;
+}
+
+QLabel#project_title {
+    margin: 1em 1em 1em 0.5em;
+}
+
+QToolBar > QToolButton {
+    width: 10em;
+    text-align: left;
+
+}
+
+QToolBar > QToolButton:hover {
+    border: none;
+}
