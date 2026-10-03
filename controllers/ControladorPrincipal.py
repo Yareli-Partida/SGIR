@@ -2,6 +2,12 @@ from PySide6 import QtCore, QtWidgets, QtGui
 
 from views.VistaPrincipal import VistaPrincipal
 from controllers.ControladorRecetas import ControladorRecetas
+from controllers.ControladorPlatillos import ControladorPlatillos
+from controllers.ControladorMenus import ControladorMenus
+from controllers.ControladorOrdenesCompra import ControladorOrdenesCompra
+from controllers.ControladorInventario import ControladorInventario
+from controllers.ControladorMerma import ControladorMerma
+from controllers.ControladorVentas import ControladorVentas
 
 class ControladorPrincipal(QtWidgets.QMainWindow):
     def __init__(self):
@@ -50,46 +56,60 @@ class ControladorPrincipal(QtWidgets.QMainWindow):
         return recetas_action_button
 
     def crear_boton_platillos(self):
-        platillos_action_button = QtGui.QAction(QtGui.QIcon("views/resources/icons/icono_platillo.svg"), "&Platillos",
-                                                self)
+        platillos_action_button = QtGui.QAction(QtGui.QIcon("views/resources/icons/icono_platillo.svg"), "&Platillos", self)
         platillos_action_button.setStatusTip("Crea, modifica y consulta platillos")
-        # recetas_action_button.triggered.connect(self.show_recetas_widget)
+        platillos_action_button.triggered.connect(self.mostrar_platillos)
         return platillos_action_button
 
     def crear_boton_menus(self):
         menus_action_button = QtGui.QAction(QtGui.QIcon("views/resources/icons/icono_menu.svg"), "&Menús", self)
         menus_action_button.setStatusTip("Crea, modifica y consulta menús")
-        # recetas_action_button.triggered.connect(self.show_recetas_widget)
+        menus_action_button.triggered.connect(self.mostrar_menus)
         return menus_action_button
 
     def crear_boton_ordenes_compra(self):
         list_compras_action_button = QtGui.QAction(QtGui.QIcon("views/resources/icons/icono_orden_compra.svg"),
                                                    "&Lista de Compras", self)
         list_compras_action_button.setStatusTip("Genera, actualiza y consulta ordenes de compras")
-        # list_compras_action_button.triggered.connect(self.toolbar_button_clicked)
+        list_compras_action_button.triggered.connect(self.mostrar_ordenes_compra)
         return list_compras_action_button
 
     def crear_boton_inventario(self):
         inventario_action_button = QtGui.QAction(QtGui.QIcon("views/resources/icons/icono_inventario.svg"),
                                                  "&Inventario", self)
         inventario_action_button.setStatusTip("Consulta y actualiza el inventario")
-        # inventario_action_button.triggered.connect(self.toolbar_button_clicked)
+        inventario_action_button.triggered.connect(self.mostrar_inventario)
         return inventario_action_button
 
     def crear_boton_merma(self):
         merma_action_button = QtGui.QAction(QtGui.QIcon("views/resources/icons/icono_merma.svg"), "&Merma", self)
         merma_action_button.setStatusTip("Consulta y actualiza la merma")
-        # merma_action_button.triggered.connect(self.toolbar_button_clicked)
+        merma_action_button.triggered.connect(self.mostrar_merma)
         return merma_action_button
 
     def crear_boton_ventas(self):
         ventas_action_button = QtGui.QAction(QtGui.QIcon("views/resources/icons/icono_venta.svg"), "&Ventas", self)
         ventas_action_button.setStatusTip("Consulta y registra ventas")
-        # ventas_action_button.triggered.connect(self.toolbar_button_clicked)
+        ventas_action_button.triggered.connect(self.mostrar_venta)
         return ventas_action_button
 
     def mostrar_recetas(self):
         self.setCentralWidget(ControladorRecetas())
 
     def mostrar_platillos(self):
-        self.setCentralWidget(ControladorRecetas())
+        self.setCentralWidget(ControladorPlatillos())
+
+    def mostrar_menus(self):
+        self.setCentralWidget(ControladorMenus())
+
+    def mostrar_ordenes_compra(self):
+        self.setCentralWidget(ControladorOrdenesCompra())
+
+    def mostrar_inventario(self):
+        self.setCentralWidget(ControladorInventario())
+
+    def mostrar_merma(self):
+        self.setCentralWidget(ControladorMerma())
+
+    def mostrar_venta(self):
+        self.setCentralWidget(ControladorVentas())
