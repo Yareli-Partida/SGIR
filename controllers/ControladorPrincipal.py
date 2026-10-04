@@ -13,6 +13,7 @@ class ControladorPrincipal(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
 
+        self.setWindowTitle("Sistema de gestión de inventario")
         self._vista_principal = VistaPrincipal()
         self._barra_herramientas = None
 
