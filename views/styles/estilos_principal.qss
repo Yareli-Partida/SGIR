@@ -27,3 +27,22 @@ QToolBar > QToolButton {
 QToolBar > QToolButton:hover {
     border: none;
 }
+
+QScrollBar {
+    background : #DADADD;
+}
+
+QScrollBar::handle {
+    background : #AAAAB1;
+    border-radius: 4px;
+}
+
+QScrollBar::handle::pressed {
+    background : #92929B;
+}
+
+QScrollBar::right-arrow:horizontal, QScrollBar::left-arrow:horizontal {
+    border: none;
+    background: none;
+    color: none;
+}
