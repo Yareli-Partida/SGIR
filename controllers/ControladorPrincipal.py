@@ -40,7 +40,7 @@ class ControladorPrincipal(QtWidgets.QMainWindow):
 
         self._barra_herramientas.addWidget(etiqueta_seccion_herramientas)
         self._barra_herramientas.addAction(self.crear_boton_recetas())
-        self._barra_herramientas.addAction(self.crear_boton_platillos())
+        # self._barra_herramientas.addAction(self.crear_boton_platillos())
         self._barra_herramientas.addAction(self.crear_boton_menus())
         self._barra_herramientas.addAction(self.crear_boton_ordenes_compra())
         self._barra_herramientas.addSeparator()
@@ -56,11 +56,11 @@ class ControladorPrincipal(QtWidgets.QMainWindow):
         recetas_action_button.triggered.connect(self.mostrar_recetas)
         return recetas_action_button
 
-    def crear_boton_platillos(self):
-        platillos_action_button = QtGui.QAction(QtGui.QIcon("views/resources/icons/icono_platillo.svg"), "&Platillos", self)
-        platillos_action_button.setStatusTip("Crea, modifica y consulta platillos")
-        platillos_action_button.triggered.connect(self.mostrar_platillos)
-        return platillos_action_button
+    # def crear_boton_platillos(self):
+    #     platillos_action_button = QtGui.QAction(QtGui.QIcon("views/resources/icons/icono_platillo.svg"), "&Platillos", self)
+    #     platillos_action_button.setStatusTip("Crea, modifica y consulta platillos")
+    #     platillos_action_button.triggered.connect(self.mostrar_platillos)
+    #     return platillos_action_button
 
     def crear_boton_menus(self):
         menus_action_button = QtGui.QAction(QtGui.QIcon("views/resources/icons/icono_menu.svg"), "&Menús", self)
@@ -97,8 +97,8 @@ class ControladorPrincipal(QtWidgets.QMainWindow):
     def mostrar_recetas(self):
         self.setCentralWidget(ControladorRecetas())
 
-    def mostrar_platillos(self):
-        self.setCentralWidget(ControladorPlatillos())
+    # def mostrar_platillos(self):
+    #     self.setCentralWidget(ControladorPlatillos())
 
     def mostrar_menus(self):
         self.setCentralWidget(ControladorMenus())
