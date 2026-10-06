@@ -60,7 +60,7 @@ class ControladorRecetas(QtWidgets.QWidget):
         self._vista_crear_receta.boton_volver.clicked.connect(self.abrir_vista_lista_recetas)
         self._layout.addWidget(self._vista_crear_receta)
 
-    def remove_last_view(self):
+    def remover_ultima_vista(self):
         last_view = self._layout.itemAt(0).widget()
         self._layout.removeWidget(last_view)
         last_view.setParent(None)
