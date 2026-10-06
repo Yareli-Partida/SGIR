@@ -1,5 +1,3 @@
-from pathlib import Path
-
 from PySide6 import QtWidgets, QtGui
 
 class VistaRecetas(QtWidgets.QWidget):
@@ -29,7 +27,6 @@ class VistaRecetas(QtWidgets.QWidget):
         self.layout.addWidget(self.boton_crear_receta, 0, 1)
         self.layout.addWidget(self.lista_recetas, 1, 0, 1, 2)
 
-        self.setStyleSheet((Path('views/styles/estilos_recetas.qss').read_text()))
 
     def crear_elemento_lista(self, nombre, boton):
         elemento = QtWidgets.QListWidgetItem()
