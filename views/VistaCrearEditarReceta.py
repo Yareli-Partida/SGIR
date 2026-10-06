@@ -8,20 +8,24 @@ class VistaCrearEditarReceta(QtWidgets.QWidget):
         super().__init__()
         self.layout = QtWidgets.QVBoxLayout()
 
-        self.titulo_wrapper = QtWidgets.QWidget()
-        self.titulo_wrapper_layout = QtWidgets.QHBoxLayout()
         self.titulo = QtWidgets.QLabel("Crear receta")
         self.titulo.setObjectName("titulo_principal")
+
+        self.botones_wrapper = QtWidgets.QWidget()
+        self.botones_wrapper_layout = QtWidgets.QHBoxLayout()
         self.boton_guardar_receta = QtWidgets.QPushButton("Guardar")
         self.boton_guardar_receta.setObjectName("boton_guardar_receta")
         self.estilizar_boton_principal(self.boton_guardar_receta)
-        self.titulo_wrapper_layout.addWidget(self.titulo)
-        self.titulo_wrapper_layout.addWidget(self.boton_guardar_receta)
-        self.titulo_wrapper.setLayout(self.titulo_wrapper_layout)
-
         self.boton_volver = QtWidgets.QPushButton("Volver")
         self.boton_volver.setObjectName("boton_volver")
         self.estilizar_boton_principal(self.boton_volver)
+        self.botones_wrapper_layout.addWidget(self.boton_volver)
+        self.botones_wrapper_layout.addSpacerItem(QtWidgets.QSpacerItem(40, 20,
+                                                                        QtWidgets.QSizePolicy.Policy.Expanding,
+                                                                        QtWidgets.QSizePolicy.Policy.Minimum))
+        self.botones_wrapper_layout.addWidget(self.boton_guardar_receta)
+        self.botones_wrapper_layout.setAlignment(Qt.AlignmentFlag.AlignAbsolute)
+        self.botones_wrapper.setLayout(self.botones_wrapper_layout)
 
         self.nombre_receta_wrapper = QtWidgets.QWidget()
         self.nombre_receta_wrapper_layout = QtWidgets.QHBoxLayout()
@@ -78,8 +82,8 @@ class VistaCrearEditarReceta(QtWidgets.QWidget):
         self.lista_tabla_instrucciones = []
         self.contador_tabla_instrucciones_filas = 0
 
-        self.layout.addWidget(self.titulo_wrapper)
-        self.layout.addWidget(self.boton_volver)
+        self.layout.addWidget(self.botones_wrapper)
+        self.layout.addWidget(self.titulo)
         self.layout.addWidget(self.nombre_receta_wrapper)
         self.layout.addWidget(self.tabla_ingredientes_titulo_wrapper)
         self.layout.addWidget(self.tabla_ingredientes)
