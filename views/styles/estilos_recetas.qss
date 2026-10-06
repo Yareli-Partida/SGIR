@@ -3,14 +3,20 @@ QLabel#titulo_principal {
     font-size: 20pt;
 }
 
-QPushButton#boton_crear_receta, QPushButton#boton_guardar_receta, QPushButton#boton_volver {
+QPushButton#boton_crear_receta,
+QPushButton#boton_guardar_receta,
+QPushButton#boton_volver,
+QPushButton#boton_editar {
     border: 1px solid #CAC4D0;
     height: 3em;
     border-radius: 20px;
     font-weight: bold;
 }
 
-QPushButton#boton_crear_receta:hover, QPushButton#boton_guardar_receta:hover, QPushButton#boton_volver:hover {
+QPushButton#boton_crear_receta:hover,
+QPushButton#boton_guardar_receta:hover,
+QPushButton#boton_volver:hover,
+QPushButton#boton_editar:hover {
     background-color: #CAC4D0
 }
 
