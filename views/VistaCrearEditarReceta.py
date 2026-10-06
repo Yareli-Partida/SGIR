@@ -2,13 +2,15 @@ from PySide6 import QtWidgets, QtGui, QtCore
 
 from PySide6.QtCore import Qt
 
+from models.Receta import Receta
+
 
 class VistaCrearEditarReceta(QtWidgets.QWidget):
     def __init__(self, receta_editar=None):
         super().__init__()
         self.layout = QtWidgets.QVBoxLayout()
 
-        self.titulo = QtWidgets.QLabel("Crear receta")
+        self.titulo = QtWidgets.QLabel()
         self.titulo.setObjectName("titulo_principal")
 
         self.botones_wrapper = QtWidgets.QWidget()
@@ -24,7 +26,6 @@ class VistaCrearEditarReceta(QtWidgets.QWidget):
                                                                         QtWidgets.QSizePolicy.Policy.Expanding,
                                                                         QtWidgets.QSizePolicy.Policy.Minimum))
         self.botones_wrapper_layout.addWidget(self.boton_guardar_receta)
-        self.botones_wrapper_layout.setAlignment(Qt.AlignmentFlag.AlignAbsolute)
         self.botones_wrapper.setLayout(self.botones_wrapper_layout)
 
         self.nombre_receta_wrapper = QtWidgets.QWidget()
@@ -39,6 +40,20 @@ class VistaCrearEditarReceta(QtWidgets.QWidget):
         self.nombre_receta_wrapper_layout.addWidget(self.etiqueta_nombre_receta)
         self.nombre_receta_wrapper_layout.addWidget(self.campo_nombre_receta)
         self.nombre_receta_wrapper.setLayout(self.nombre_receta_wrapper_layout)
+
+        self.num_porciones_wrapper = QtWidgets.QWidget()
+        self.num_porciones_wrapper.setObjectName("num_porciones_wrapper")
+        self.num_porciones_wrapper_layout = QtWidgets.QHBoxLayout()
+        self.num_porciones_wrapper_layout.setObjectName("num_porciones_wrapper_layout")
+        self.num_porciones_wrapper_layout.setAlignment(Qt.AlignmentFlag.AlignLeft)
+        self.etiqueta_num_porciones = QtWidgets.QLabel("Número de porciones: ")
+        self.etiqueta_num_porciones.setObjectName("etiqueta_num_porciones")
+        self.selector_num_porciones = QtWidgets.QSpinBox()
+        self.selector_num_porciones.setObjectName("selector_num_porciones")
+        self.selector_num_porciones.setFixedWidth(self.calcular_ancho_por_caracteres(7))
+        self.num_porciones_wrapper_layout.addWidget(self.etiqueta_num_porciones)
+        self.num_porciones_wrapper_layout.addWidget(self.selector_num_porciones)
+        self.num_porciones_wrapper.setLayout(self.num_porciones_wrapper_layout)
 
         self.tabla_ingredientes_titulo_wrapper = QtWidgets.QWidget()
         self.tabla_ingredientes_titulo_wrapper.setObjectName("tabla_ingredientes_titulo_wrapper")
@@ -85,6 +100,7 @@ class VistaCrearEditarReceta(QtWidgets.QWidget):
         self.layout.addWidget(self.botones_wrapper)
         self.layout.addWidget(self.titulo)
         self.layout.addWidget(self.nombre_receta_wrapper)
+        self.layout.addWidget(self.num_porciones_wrapper)
         self.layout.addWidget(self.tabla_ingredientes_titulo_wrapper)
         self.layout.addWidget(self.tabla_ingredientes)
         self.layout.addWidget(self.tabla_instrucciones_titulo_wrapper)
@@ -93,8 +109,13 @@ class VistaCrearEditarReceta(QtWidgets.QWidget):
         self.configurar_tabla_ingredientes()
         self.configurar_tabla_instrucciones()
 
-        self.setLayout(self.layout)
+        if receta_editar is None:
+            self.titulo.setText("Crear receta")
+        else:
+            self.titulo.setText("Editar receta")
+            self.rellena_forma(receta_editar)
 
+        self.setLayout(self.layout)
 
     def estilizar_boton_principal(self, boton):
         efecto_sombra = QtWidgets.QGraphicsDropShadowEffect(self)
@@ -163,6 +184,10 @@ class VistaCrearEditarReceta(QtWidgets.QWidget):
 
         self.contador_tabla_instrucciones_filas += 1
         self.lista_tabla_instrucciones.append(campo_instruccion)
+
+    def rellena_forma(self, receta):
+        self.selector_num_porciones.setValue(receta.num_porciones)
+        self.campo_nombre_receta.setText(receta.nombre)
 
     def calcular_ancho_por_caracteres(self, num_caracteres: int):
         palabra = "a" * (num_caracteres + 1)
