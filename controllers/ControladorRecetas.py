@@ -33,7 +33,7 @@ class ControladorRecetas(QtWidgets.QWidget):
         self.setStyleSheet((Path('views/styles/estilos_recetas.qss').read_text()))
 
     def abrir_vista_lista_recetas(self):
-        self.remove_last_view()
+        self.remover_ultima_vista()
         self._layout.addWidget(self._vista_lista_recetas)
 
     def mostrar_lista_recetas(self, lista_recetas:list):
@@ -48,17 +48,25 @@ class ControladorRecetas(QtWidgets.QWidget):
         self._vista_receta_detalles = VistaRecetaDetalles(receta)
         self._vista_receta_detalles.setObjectName("vista_receta_detalles")
 
-        self.remove_last_view()
+        self.remover_ultima_vista()
         self._layout.addWidget(self._vista_receta_detalles)
+        self._vista_receta_detalles.boton_editar.clicked.connect(lambda: self.abrir_editar_receta(receta))
+        self._vista_receta_detalles.boton_volver.clicked.connect(self.abrir_vista_lista_recetas)
         self.mostrar_detalles_receta()
 
     def mostrar_detalles_receta(self):
         pass
 
     def abrir_crear_receta(self):
-        self.remove_last_view()
+        self.remover_ultima_vista()
         self._vista_crear_receta.boton_volver.clicked.connect(self.abrir_vista_lista_recetas)
         self._layout.addWidget(self._vista_crear_receta)
+
+    def abrir_editar_receta(self, receta):
+        self._vista_editar_receta = VistaCrearEditarReceta(receta)
+        self._vista_editar_receta.boton_volver.clicked.connect(lambda: self.abrir_vista_detalles_receta(receta))
+        self.remover_ultima_vista()
+        self._layout.addWidget(self._vista_editar_receta)
 
     def remover_ultima_vista(self):
         last_view = self._layout.itemAt(0).widget()
