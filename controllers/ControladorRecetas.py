@@ -35,8 +35,6 @@ class ControladorRecetas(QtWidgets.QWidget):
     def abrir_vista_lista_recetas(self):
         self.remove_last_view()
         self._layout.addWidget(self._vista_lista_recetas)
-        # también esto es para testeo manual
-        self.mostrar_lista_recetas([Receta(1, "Pasta en salsa de tomate", "", 10)])
 
     def mostrar_lista_recetas(self, lista_recetas:list):
         for receta in lista_recetas:
@@ -59,6 +57,7 @@ class ControladorRecetas(QtWidgets.QWidget):
 
     def abrir_crear_receta(self):
         self.remove_last_view()
+        self._vista_crear_receta.boton_volver.clicked.connect(self.abrir_vista_lista_recetas)
         self._layout.addWidget(self._vista_crear_receta)
 
     def remove_last_view(self):
