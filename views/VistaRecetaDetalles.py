@@ -7,7 +7,7 @@ class VistaRecetaDetalles(QtWidgets.QWidget):
 
         self.layout = QtWidgets.QGridLayout(self)
         self.titulo = QtWidgets.QLabel(receta.nombre)
-        self.titulo.setObjectName("titulo")
+        self.titulo.setObjectName("titulo_principal")
         self.layout.addWidget(self.titulo)
         self.tabla_ingredientes = QtWidgets.QTableWidget()
 
