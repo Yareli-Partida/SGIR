@@ -16,7 +16,7 @@ class VistaRecetas(QtWidgets.QWidget):
         self.boton_crear_receta = QtWidgets.QPushButton("Crear receta")
         self.boton_crear_receta.setObjectName("boton_crear_receta")
         largo_boton = int(self.boton_crear_receta.sizeHint().width() * 1.25)
-        self.boton_crear_receta.setMaximumWidth(largo_boton)
+        self.boton_crear_receta.setFixedWidth(largo_boton)
         self.boton_crear_receta.setGraphicsEffect(self.efecto_sombra)
 
         self.lista_recetas = QtWidgets.QListWidget()
