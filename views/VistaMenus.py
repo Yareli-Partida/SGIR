@@ -19,6 +19,7 @@ class VistaMenus(QtWidgets.QWidget):
 
         self.boton_crear_menu = QtWidgets.QPushButton("Crear menú")
         self.boton_crear_menu.setObjectName("boton_crear_menu")
+        self.boton_crear_menu.setProperty("cssClass", "boton_principal")
         self.boton_crear_menu.setFixedWidth(int(self.boton_crear_menu.sizeHint().width() * 1.25))
         self.boton_crear_menu.setGraphicsEffect(efecto_sombra)
 

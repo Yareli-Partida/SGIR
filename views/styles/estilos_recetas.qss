@@ -3,23 +3,6 @@ QLabel#titulo_principal {
     font-size: 20pt;
 }
 
-QPushButton#boton_crear_receta,
-QPushButton#boton_guardar_receta,
-QPushButton#boton_volver,
-QPushButton#boton_editar {
-    border: 1px solid #CAC4D0;
-    height: 3em;
-    border-radius: 20px;
-    font-weight: bold;
-}
-
-QPushButton#boton_crear_receta:hover,
-QPushButton#boton_guardar_receta:hover,
-QPushButton#boton_volver:hover,
-QPushButton#boton_editar:hover {
-    background-color: #CAC4D0
-}
-
 QListWidget#lista_recetas {
     margin: 2em, none, none, none;
     border: none;
@@ -32,18 +15,6 @@ QListWidget::item, QLabel#etiqueta {
 QWidget#elemento_lista {
     border: 1px solid #E0E0E0;
     border-radius: 12.5px;
-}
-
-QPushButton#boton_detalles, QPushButton#boton_agregar_ingrediente, QPushButton#boton_agregar_instruccion {
-    border: 1px solid #E8DEF8;
-    background-color: #E8DEF8;
-    height: 1.5em;
-    border-radius: 5px;
-    font-weight: bold;
-}
-
-QPushButton#boton_detalles:hover, QPushButton#boton_agregar_ingrediente:hover, QPushButton#boton_agregar_instruccion:hover {
-    background-color: #CEB9F0;
 }
 
 QTableWidget {

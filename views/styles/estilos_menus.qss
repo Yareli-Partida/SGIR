@@ -3,17 +3,6 @@ QLabel#titulo_principal {
     font-size: 20pt;
 }
 
-QPushButton#boton_crear_menu {
-    border: 1px solid #CAC4D0;
-    height: 3em;
-    border-radius: 20px;
-    font-weight: bold;
-}
-
-QPushButton#boton_crear_menu:hover {
-    background-color: #CAC4D0;
-}
-
 QWidget#tarjeta_menu {
     border: 1px solid #E0E0E0;
     border-radius: 12.5px;
@@ -27,18 +16,4 @@ QLabel#etiqueta_nombre_menu {
 QWidget#elemento_platillos {
     border-bottom: 2px solid #E0E0E0
 }
-
-QPushButton[cssClass="boton_secundario"] {
-    border: 1px solid #E8DEF8;
-    background-color: #E8DEF8;
-    height: 1.5em;
-    border-radius: 5px;
-    font-weight: bold;
-}
-
-QPushButton#boton_ver_mas:hover {
-    background-color: #CEB9F0;
-}
-
-
 

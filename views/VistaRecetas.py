@@ -15,6 +15,7 @@ class VistaRecetas(QtWidgets.QWidget):
 
         self.boton_crear_receta = QtWidgets.QPushButton("Crear receta")
         self.boton_crear_receta.setObjectName("boton_crear_receta")
+        self.boton_crear_receta.setProperty("cssClass", "boton_principal")
         largo_boton = int(self.boton_crear_receta.sizeHint().width() * 1.25)
         self.boton_crear_receta.setFixedWidth(largo_boton)
         self.boton_crear_receta.setGraphicsEffect(self.efecto_sombra)
@@ -53,7 +54,7 @@ class VistaRecetas(QtWidgets.QWidget):
 
     def crear_boton_detalles(self):
         boton = QtWidgets.QPushButton("Detalles")
-        boton.setObjectName("boton_detalles")
+        boton.setProperty("cssClass", "boton_secundario")
         largo = int(boton.sizeHint().width())
         boton.setMaximumWidth(largo)
 

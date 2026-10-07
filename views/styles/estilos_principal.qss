@@ -46,3 +46,27 @@ QScrollBar::right-arrow:horizontal, QScrollBar::left-arrow:horizontal {
     background: none;
     color: none;
 }
+
+QPushButton[cssClass="boton_principal"] {
+    border: 1px solid #CAC4D0;
+    height: 3em;
+    border-radius: 20px;
+    font-weight: bold;
+}
+
+QPushButton[cssClass="boton_principal"]:hover {
+    background-color: #CAC4D0;
+}
+
+QPushButton[cssClass="boton_secundario"] {
+    border: 1px solid #E8DEF8;
+    background-color: #E8DEF8;
+    height: 1.5em;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+QPushButton[cssClass="boton_secundario"]:hover {
+    background-color: #CEB9F0;
+}
+
