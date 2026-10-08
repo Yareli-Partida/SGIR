@@ -55,7 +55,7 @@ class VistaRecetas(QtWidgets.QWidget):
     def crear_boton_detalles(self):
         boton = QtWidgets.QPushButton("Detalles")
         boton.setProperty("cssClass", "boton_secundario")
-        largo = int(boton.sizeHint().width())
+        largo = int(boton.sizeHint().width() * 1.25)
         boton.setMaximumWidth(largo)
 
         return boton
