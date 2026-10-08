@@ -40,7 +40,7 @@ class ControladorRecetas(QtWidgets.QWidget):
         for receta in lista_recetas:
             boton_detalles = self._vista_lista_recetas.crear_boton_detalles()
             # aparentemente clicked.connect no toma funciones con argumentos, para hacerlo usa lambda
-            boton_detalles.clicked.connect(lambda: self.abrir_vista_detalles_receta(receta))
+            boton_detalles.clicked.connect(lambda state, receta_obj=receta: self.abrir_vista_detalles_receta(receta_obj))
 
             self._vista_lista_recetas.crear_elemento_lista(receta.nombre, boton_detalles)
 
@@ -50,7 +50,7 @@ class ControladorRecetas(QtWidgets.QWidget):
 
         self.remover_ultima_vista()
         self._layout.addWidget(self._vista_receta_detalles)
-        self._vista_receta_detalles.boton_editar.clicked.connect(lambda: self.abrir_editar_receta(receta))
+        self._vista_receta_detalles.boton_editar.clicked.connect(lambda state, receta_obj=receta: self.abrir_editar_receta(receta_obj))
         self._vista_receta_detalles.boton_volver.clicked.connect(self.abrir_vista_lista_recetas)
         self.mostrar_detalles_receta()
 
@@ -64,7 +64,7 @@ class ControladorRecetas(QtWidgets.QWidget):
 
     def abrir_editar_receta(self, receta):
         self._vista_editar_receta = VistaCrearEditarReceta(receta)
-        self._vista_editar_receta.boton_volver.clicked.connect(lambda: self.abrir_vista_detalles_receta(receta))
+        self._vista_editar_receta.boton_volver.clicked.connect(lambda state, receta_obj=receta: self.abrir_vista_detalles_receta(receta_obj))
         self.remover_ultima_vista()
         self._layout.addWidget(self._vista_editar_receta)
 

@@ -35,12 +35,11 @@ class ControladorMenus(QtWidgets.QWidget):
         fila = 1
         col = 0
 
-        for i in range(len(lista_menu)):
-            tarjeta = self._vista_menus.crear_tarjeta_menu(lista_menu[i], lista_platillos)
+        for menu in lista_menu:
+            tarjeta = self._vista_menus.crear_tarjeta_menu(menu, lista_platillos)
             tarjeta.setFixedWidth(self.width() // 3)
-            boton = tarjeta.findChild(QtWidgets.QWidget, "contenedor_titulo_menu").findChild(QtWidgets.QPushButton, lista_menu[i].nombre)
-            boton.clicked.connect(lambda: self.abrir_vista_editar_menu(lista_menu[i]))
-            print(f"connected menu {lista_menu[i].nombre} to {boton.objectName()}")
+            boton = tarjeta.findChild(QtWidgets.QWidget, "contenedor_titulo_menu").findChild(QtWidgets.QPushButton, menu.nombre)
+            boton.clicked.connect(lambda state, menu_obj=menu: self.abrir_vista_editar_menu(menu_obj))
             self._vista_menus.layout.addWidget(tarjeta, fila, col)
             col += 1
 
