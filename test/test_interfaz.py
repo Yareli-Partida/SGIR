@@ -10,7 +10,7 @@ def test_lista_recetas(qtbot, receta_datos_prueba):
     # por lo que este test no funcionará, para que corra correctamente hay que comentar esa linea
     lista_errores = []
 
-    widget = ControladorRecetas()
+    widget = VistaRecetas()
     # el qtbot va a inicializar el widget y correr la función para agregar recetas
     qtbot.addWidget(widget)
     widget.mostrar_lista_recetas(receta_datos_prueba)
@@ -30,7 +30,7 @@ def test_lista_recetas(qtbot, receta_datos_prueba):
     assert lista_errores.count(True) == 0
 
 def test_abrir_detalles_recetas(qtbot, receta_datos_prueba):
-    widget = ControladorRecetas()
+    widget = VistaRecetas()
     qtbot.addWidget(widget)
     widget.mostrar_lista_recetas(receta_datos_prueba)
     ui = widget._vista_lista_recetas
