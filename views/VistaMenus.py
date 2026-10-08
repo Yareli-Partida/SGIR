@@ -1,95 +1,54 @@
 from PySide6 import QtCore, QtWidgets, QtGui
+from pathlib import Path
 
+from views.VistaListaMenus import VistaListaMenus
+from models.Menu import Menu
 from models.Platillo import Platillo
-
 
 class VistaMenus(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
-        self.layout = QtWidgets.QGridLayout(self)
-        self.layout.setAlignment(QtGui.Qt.AlignmentFlag.AlignTop)
-        self.layout.setVerticalSpacing(50)
-        self.lista_tajetas_menu = []
+        self._layout = QtWidgets.QVBoxLayout()
+        self._vista_menus = VistaListaMenus()
 
-        self.titulo_principal = QtWidgets.QLabel("Menús")
-        self.titulo_principal.setObjectName("titulo_principal")
+        self._layout.addWidget(self._vista_menus)
+        self.mostrar_menu()
 
-        efecto_sombra = QtWidgets.QGraphicsDropShadowEffect(self)
-        efecto_sombra.setOffset(1, 1)
-        efecto_sombra.setBlurRadius(4)
-        efecto_sombra.setColor(QtGui.QColor(122, 122, 133, 100))
+        self.setLayout(self._layout)
+        self.setStyleSheet((Path('views/styles/estilos_menus.qss').read_text()))
 
-        self.boton_crear_menu = QtWidgets.QPushButton("Crear menú")
-        self.boton_crear_menu.setObjectName("boton_crear_menu")
-        self.boton_crear_menu.setProperty("cssClass", "boton_principal")
-        self.boton_crear_menu.setFixedWidth(int(self.boton_crear_menu.sizeHint().width() * 1.25))
-        self.boton_crear_menu.setGraphicsEffect(efecto_sombra)
+    def mostrar_menu(self):
+        # para testeo manual
+        lista_menu = [
+            Menu(1, "Menú de entre semana", 5),
+            Menu(2, "Menú de fin de semana", 7)
+        ]
 
-        self.layout.addWidget(self.titulo_principal, 0, 0)
-        self.layout.addWidget(self.boton_crear_menu, 0, 3, alignment=QtGui.Qt.AlignmentFlag.AlignRight)
+        lista_platillos = [
+            Platillo(1, "Pasta en salsa de tomate", 150),
+            Platillo(2, "Puré de papas", 70),
+            Platillo(3, "Filete de res", 250),
+            Platillo(4, "Caldo de pollo", 180),
+            Platillo(5, "Café", 50),
+        ]
 
-        self.setLayout(self.layout)
+        fila = 1
+        col = 0
 
-    def crear_tarjeta_menu(self, menu, platillos=None):
-        tarjeta = QtWidgets.QWidget()
-        tarjeta.setObjectName("tarjeta_menu")
-        tarjeta_layout = QtWidgets.QVBoxLayout()
-
-        efecto_sombra = QtWidgets.QGraphicsDropShadowEffect(self)
-        efecto_sombra.setOffset(1, 1)
-        efecto_sombra.setBlurRadius(4)
-        efecto_sombra.setColor(QtGui.QColor(122, 122, 133, 100))
-
-        tarjeta.setGraphicsEffect(efecto_sombra)
-
-        contenedor_titulo_menu = QtWidgets.QWidget()
-        contenedor_titulo_menu.setObjectName("contenedor_titulo_menu")
-        contenedor_titulo_menu_layout = QtWidgets.QHBoxLayout()
-
-        etiqueta_nombre_menu = QtWidgets.QLabel(menu.nombre)
-        etiqueta_nombre_menu.setObjectName("etiqueta_nombre_menu")
-        etiqueta_nombre_menu.setWordWrap(True)
-        boton_ver_mas = QtWidgets.QPushButton("Ver más")
-        boton_ver_mas.setObjectName(f"{menu.nombre}")
-        boton_ver_mas.setProperty("cssClass", "boton_secundario")
-        boton_ver_mas.setFixedWidth(int(boton_ver_mas.sizeHint().width() * 1.25))
-        contenedor_titulo_menu_layout.addWidget(etiqueta_nombre_menu)
-        contenedor_titulo_menu_layout.addSpacerItem(QtWidgets.QSpacerItem(40, 20,
-                                                                  QtWidgets.QSizePolicy.Policy.Expanding,
-                                                                  QtWidgets.QSizePolicy.Policy.Minimum))
-        contenedor_titulo_menu_layout.addWidget(boton_ver_mas)
-        contenedor_titulo_menu.setLayout(contenedor_titulo_menu_layout)
-        tarjeta_layout.addWidget(contenedor_titulo_menu)
-
-        for platillo in platillos:
-            contenedor = QtWidgets.QWidget()
-            contenedor.setObjectName("elemento_platillos")
-            contenedor_layout = QtWidgets.QHBoxLayout()
-            contenedor_layout.setAlignment(QtGui.Qt.AlignmentFlag.AlignLeft)
-            etiqueta_platillo = QtWidgets.QLabel(platillo.nombre)
-            etiqueta_platillo.setWordWrap(True)
-            etiqueta_precio = QtWidgets.QLabel(f"${platillo.precio}")
-            etiqueta_precio.setFixedWidth(etiqueta_precio.sizeHint().width())
-
-            contenedor_layout.addWidget(etiqueta_platillo)
-            contenedor_layout.addSpacerItem(QtWidgets.QSpacerItem(40, 20,
-                                                                  QtWidgets.QSizePolicy.Policy.Expanding,
-                                                                  QtWidgets.QSizePolicy.Policy.Minimum))
-            contenedor_layout.addWidget(etiqueta_precio)
-            contenedor.setLayout(contenedor_layout)
-
-            tarjeta_layout.addWidget(contenedor)
-
-        tarjeta.setLayout(tarjeta_layout)
-        tarjeta.setFixedHeight(tarjeta.sizeHint().height())
-        self.lista_tajetas_menu.append(tarjeta)
-
-        return tarjeta
-
-    def resizeEvent(self, event):
-        super().resizeEvent(event)
-
-        for tarjeta in self.lista_tajetas_menu:
+        for menu in lista_menu:
+            tarjeta = self._vista_menus.crear_tarjeta_menu(menu, lista_platillos)
             tarjeta.setFixedWidth(self.width() // 3)
+            boton = tarjeta.findChild(QtWidgets.QWidget, "contenedor_titulo_menu").findChild(QtWidgets.QPushButton, menu.nombre)
+            boton.clicked.connect(lambda state, menu_obj=menu: self.abrir_vista_editar_menu(menu_obj))
+            self._vista_menus.layout.addWidget(tarjeta, fila, col)
+            col += 1
 
-        self.layout.maximumSize().setHeight(self.layout.sizeHint().height())
+            if col > 3:
+                fila += 1
+                col = 0
+
+    def abrir_vista_editar_menu(self, menu):
+        print(menu.nombre)
+
+    def abrir_vista_crear_menu(self):
+        pass

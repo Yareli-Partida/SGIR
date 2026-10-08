@@ -1,61 +1,74 @@
-from PySide6 import QtWidgets, QtGui
+from PySide6 import QtWidgets
+from pathlib import Path
+
+from views.VistaListaRecetas import VistaListaRecetas
+from views.VistaRecetaDetalles import VistaRecetaDetalles
+from views.VistaCrearEditarReceta import VistaCrearEditarReceta
+from models.Receta import Receta
 
 class VistaRecetas(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
-        self.layout = QtWidgets.QGridLayout(self)
+        self._layout = QtWidgets.QVBoxLayout()
 
-        self.titulo = QtWidgets.QLabel("Recetas")
-        self.titulo.setObjectName("titulo_principal")
+        self._vista_lista_recetas = VistaListaRecetas()
+        self._vista_lista_recetas.setObjectName("vista_lista_recetas")
 
-        self.efecto_sombra = QtWidgets.QGraphicsDropShadowEffect(self)
-        self.efecto_sombra.setOffset(1, 1)
-        self.efecto_sombra.setBlurRadius(4)
-        self.efecto_sombra.setColor(QtGui.QColor(122, 122, 133, 100))
+        self._vista_receta_detalles = None
 
-        self.boton_crear_receta = QtWidgets.QPushButton("Crear receta")
-        self.boton_crear_receta.setObjectName("boton_crear_receta")
-        self.boton_crear_receta.setProperty("cssClass", "boton_principal")
-        largo_boton = int(self.boton_crear_receta.sizeHint().width() * 1.25)
-        self.boton_crear_receta.setFixedWidth(largo_boton)
-        self.boton_crear_receta.setGraphicsEffect(self.efecto_sombra)
+        self._vista_crear_receta = VistaCrearEditarReceta()
+        self._vista_crear_receta.setObjectName("vista_crear_receta")
 
-        self.lista_recetas = QtWidgets.QListWidget()
-        self.lista_recetas.setObjectName("lista_recetas")
-        self.lista_recetas.setSpacing(10)
+        self._vista_editar_receta = None
 
-        self.layout.addWidget(self.titulo, 0, 0)
-        self.layout.addWidget(self.boton_crear_receta, 0, 1)
-        self.layout.addWidget(self.lista_recetas, 1, 0, 1, 2)
+        self._layout.addWidget(self._vista_lista_recetas)
+        self.setLayout(self._layout)
 
+        crear_receta_boton = self._vista_lista_recetas.findChild(QtWidgets.QPushButton, "boton_crear_receta")
+        crear_receta_boton.clicked.connect(self.abrir_crear_receta)
 
-    def crear_elemento_lista(self, nombre, boton):
-        elemento = QtWidgets.QListWidgetItem()
-        widget = QtWidgets.QWidget()
-        widget.setObjectName("elemento_lista")
+        # esto es solo para testeo manual
+        self.mostrar_lista_recetas([Receta(1, "Pasta en salsa de tomate", "", 10)])
 
-        layout_elemento = QtWidgets.QHBoxLayout()
-        etiqueta_nombre = QtWidgets.QLabel(nombre)
-        etiqueta_nombre.setObjectName("etiqueta")
+        self.setStyleSheet((Path('views/styles/estilos_recetas.qss').read_text()))
 
-        layout_elemento.addWidget(etiqueta_nombre)
-        layout_elemento.addWidget(boton)
+    def abrir_vista_lista_recetas(self):
+        self.remover_ultima_vista()
+        self._layout.addWidget(self._vista_lista_recetas)
 
-        widget.setLayout(layout_elemento)
-        sombra = QtWidgets.QGraphicsDropShadowEffect(self)
-        sombra.setOffset(1, 1)
-        sombra.setBlurRadius(4)
-        sombra.setColor(QtGui.QColor(122, 122, 133, 100))
-        widget.setGraphicsEffect(sombra)
-        elemento.setSizeHint(widget.sizeHint())
+    def mostrar_lista_recetas(self, lista_recetas:list):
+        for receta in lista_recetas:
+            boton_detalles = self._vista_lista_recetas.crear_boton_detalles()
+            # aparentemente clicked.connect no toma funciones con argumentos, para hacerlo usa lambda
+            boton_detalles.clicked.connect(lambda state, receta_obj=receta: self.abrir_vista_detalles_receta(receta_obj))
 
-        self.lista_recetas.addItem(elemento)
-        self.lista_recetas.setItemWidget(elemento, widget)
+            self._vista_lista_recetas.crear_elemento_lista(receta.nombre, boton_detalles)
 
-    def crear_boton_detalles(self):
-        boton = QtWidgets.QPushButton("Detalles")
-        boton.setProperty("cssClass", "boton_secundario")
-        largo = int(boton.sizeHint().width() * 1.25)
-        boton.setMaximumWidth(largo)
+    def abrir_vista_detalles_receta(self, receta):
+        self._vista_receta_detalles = VistaRecetaDetalles(receta)
+        self._vista_receta_detalles.setObjectName("vista_receta_detalles")
 
-        return boton
+        self.remover_ultima_vista()
+        self._layout.addWidget(self._vista_receta_detalles)
+        self._vista_receta_detalles.boton_editar.clicked.connect(lambda state, receta_obj=receta: self.abrir_editar_receta(receta_obj))
+        self._vista_receta_detalles.boton_volver.clicked.connect(self.abrir_vista_lista_recetas)
+        self.mostrar_detalles_receta()
+
+    def mostrar_detalles_receta(self):
+        pass
+
+    def abrir_crear_receta(self):
+        self.remover_ultima_vista()
+        self._vista_crear_receta.boton_volver.clicked.connect(self.abrir_vista_lista_recetas)
+        self._layout.addWidget(self._vista_crear_receta)
+
+    def abrir_editar_receta(self, receta):
+        self._vista_editar_receta = VistaCrearEditarReceta(receta)
+        self._vista_editar_receta.boton_volver.clicked.connect(lambda state, receta_obj=receta: self.abrir_vista_detalles_receta(receta_obj))
+        self.remover_ultima_vista()
+        self._layout.addWidget(self._vista_editar_receta)
+
+    def remover_ultima_vista(self):
+        last_view = self._layout.itemAt(0).widget()
+        self._layout.removeWidget(last_view)
+        last_view.setParent(None)

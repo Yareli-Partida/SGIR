@@ -1,4 +1,4 @@
-from controllers.ControladorRecetas import ControladorRecetas
+from views.VistaRecetas import VistaRecetas
 from datos_de_prueba import *
 
 def test_tabla_inventario():

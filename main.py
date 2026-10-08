@@ -2,13 +2,13 @@ import sys
 from pathlib import Path
 
 from PySide6 import QtWidgets
-from controllers.ControladorPrincipal import ControladorPrincipal
+from views.VistaVentanaPrincipal import VistaVentanaPrincipal
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication([])
     app.setStyleSheet((Path('views/styles/estilos_principal.qss').read_text()))
 
-    widget = ControladorPrincipal()
+    widget = VistaVentanaPrincipal()
     widget.resize(800, 600)
     widget.show()
 

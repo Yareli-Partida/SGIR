@@ -1,15 +1,14 @@
 from PySide6 import QtCore, QtWidgets, QtGui
 
 from views.VistaPrincipal import VistaPrincipal
-from controllers.ControladorRecetas import ControladorRecetas
-from controllers.ControladorPlatillos import ControladorPlatillos
-from controllers.ControladorMenus import ControladorMenus
-from controllers.ControladorOrdenesCompra import ControladorOrdenesCompra
-from controllers.ControladorInventario import ControladorInventario
-from controllers.ControladorMerma import ControladorMerma
-from controllers.ControladorVentas import ControladorVentas
+from views.VistaRecetas import VistaRecetas
+from views.VistaMenus import VistaMenus
+from views.VistaOrdenesCompra import VistaOrdenesCompra
+from views.VistaInventario import VistaInventario
+from views.VistaMerma import VistaMerma
+from views.VistaVentas import VistaVentas
 
-class ControladorPrincipal(QtWidgets.QMainWindow):
+class VistaVentanaPrincipal(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
 
@@ -56,12 +55,6 @@ class ControladorPrincipal(QtWidgets.QMainWindow):
         recetas_action_button.triggered.connect(self.mostrar_recetas)
         return recetas_action_button
 
-    # def crear_boton_platillos(self):
-    #     platillos_action_button = QtGui.QAction(QtGui.QIcon("views/resources/icons/icono_platillo.svg"), "&Platillos", self)
-    #     platillos_action_button.setStatusTip("Crea, modifica y consulta platillos")
-    #     platillos_action_button.triggered.connect(self.mostrar_platillos)
-    #     return platillos_action_button
-
     def crear_boton_menus(self):
         menus_action_button = QtGui.QAction(QtGui.QIcon("views/resources/icons/icono_menu.svg"), "&Menús", self)
         menus_action_button.setStatusTip("Crea, modifica y consulta menús")
@@ -95,22 +88,22 @@ class ControladorPrincipal(QtWidgets.QMainWindow):
         return ventas_action_button
 
     def mostrar_recetas(self):
-        self.setCentralWidget(ControladorRecetas())
+        self.setCentralWidget(VistaRecetas())
 
     # def mostrar_platillos(self):
     #     self.setCentralWidget(ControladorPlatillos())
 
     def mostrar_menus(self):
-        self.setCentralWidget(ControladorMenus())
+        self.setCentralWidget(VistaMenus())
 
     def mostrar_ordenes_compra(self):
-        self.setCentralWidget(ControladorOrdenesCompra())
+        self.setCentralWidget(VistaOrdenesCompra())
 
     def mostrar_inventario(self):
-        self.setCentralWidget(ControladorInventario())
+        self.setCentralWidget(VistaInventario())
 
     def mostrar_merma(self):
-        self.setCentralWidget(ControladorMerma())
+        self.setCentralWidget(VistaMerma())
 
     def mostrar_venta(self):
-        self.setCentralWidget(ControladorVentas())
+        self.setCentralWidget(VistaVentas())
