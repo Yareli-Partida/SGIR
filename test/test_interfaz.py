@@ -4,8 +4,10 @@ from datos_de_prueba import *
 def test_tabla_inventario():
     pass
 
-
 def test_lista_recetas(qtbot, receta_datos_prueba):
+    # En el __init__ de ControladorRecetas se encuentra una llamada a la función de
+    # mostrar_lista_recetas con un valor de testeo en la linea 31,
+    # por lo que este test no funcionará, para que corra correctamente hay que comentar esa linea
     lista_errores = []
 
     widget = ControladorRecetas()
@@ -27,7 +29,7 @@ def test_lista_recetas(qtbot, receta_datos_prueba):
     # Checa si hubo algún resultado malo en la lista
     assert lista_errores.count(True) == 0
 
-def test_abrir_detalles_recetas(qtbot, receta_datos_prueba, capsys):
+def test_abrir_detalles_recetas(qtbot, receta_datos_prueba):
     widget = ControladorRecetas()
     qtbot.addWidget(widget)
     widget.mostrar_lista_recetas(receta_datos_prueba)
@@ -43,7 +45,7 @@ def test_abrir_detalles_recetas(qtbot, receta_datos_prueba, capsys):
     # checa si sí se abrió la página de detalles
     if vista.objectName() == "vista_receta_detalles":
         #checa que se abrió la receta correcta
-        assert vista.layout.itemAt(0).widget().text() == receta_prueba.nombre
+        assert vista.layout.itemAt(2).widget().text() == receta_prueba.nombre
     else:
         assert False
 
