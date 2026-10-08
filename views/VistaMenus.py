@@ -6,7 +6,9 @@ from models.Platillo import Platillo
 class VistaMenus(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
-        self.layout = QtWidgets.QGridLayout()
+        self.layout = QtWidgets.QGridLayout(self)
+        self.layout.setAlignment(QtGui.Qt.AlignmentFlag.AlignTop)
+        self.layout.setVerticalSpacing(50)
         self.lista_tajetas_menu = []
 
         self.titulo_principal = QtWidgets.QLabel("Menús")
@@ -24,7 +26,7 @@ class VistaMenus(QtWidgets.QWidget):
         self.boton_crear_menu.setGraphicsEffect(efecto_sombra)
 
         self.layout.addWidget(self.titulo_principal, 0, 0)
-        self.layout.addWidget(self.boton_crear_menu, 0, 3)
+        self.layout.addWidget(self.boton_crear_menu, 0, 3, alignment=QtGui.Qt.AlignmentFlag.AlignRight)
 
         self.setLayout(self.layout)
 
@@ -79,6 +81,7 @@ class VistaMenus(QtWidgets.QWidget):
             tarjeta_layout.addWidget(contenedor)
 
         tarjeta.setLayout(tarjeta_layout)
+        tarjeta.setFixedHeight(tarjeta.sizeHint().height())
         self.lista_tajetas_menu.append(tarjeta)
 
         return tarjeta
@@ -88,3 +91,5 @@ class VistaMenus(QtWidgets.QWidget):
 
         for tarjeta in self.lista_tajetas_menu:
             tarjeta.setFixedWidth(self.width() // 3)
+
+        self.layout.maximumSize().setHeight(self.layout.sizeHint().height())
