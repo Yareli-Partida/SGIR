@@ -2,6 +2,7 @@ from PySide6 import QtCore, QtWidgets, QtGui
 from pathlib import Path
 
 from views.VistaListaMenus import VistaListaMenus
+from views.VistaMenuDetalles import VistaMenuDetalles
 from models.Menu import Menu
 from models.Platillo import Platillo
 
@@ -10,6 +11,7 @@ class VistaMenus(QtWidgets.QWidget):
         super().__init__()
         self._layout = QtWidgets.QVBoxLayout()
         self._vista_menus = VistaListaMenus()
+        self._vista_menu_detalles = None
 
         self._layout.addWidget(self._vista_menus)
         self.mostrar_menu()
@@ -39,7 +41,7 @@ class VistaMenus(QtWidgets.QWidget):
             tarjeta = self._vista_menus.crear_tarjeta_menu(menu, lista_platillos)
             tarjeta.setFixedWidth(self.width() // 3)
             boton = tarjeta.findChild(QtWidgets.QWidget, "contenedor_titulo_menu").findChild(QtWidgets.QPushButton, menu.nombre)
-            boton.clicked.connect(lambda state, menu_obj=menu: self.abrir_vista_editar_menu(menu_obj))
+            boton.clicked.connect(lambda state, menu_obj=menu: self.abrir_vista_menu_detalles(menu_obj))
             self._vista_menus.layout.addWidget(tarjeta, fila, col)
             col += 1
 
@@ -47,8 +49,18 @@ class VistaMenus(QtWidgets.QWidget):
                 fila += 1
                 col = 0
 
+    def abrir_vista_menu_detalles(self, menu):
+        self._vista_menu_detalles = VistaMenuDetalles(menu)
+        self.remover_ultima_vista()
+        self._layout.addWidget(self._vista_menu_detalles)
+
     def abrir_vista_editar_menu(self, menu):
-        print(menu.nombre)
+        self.remover_ultima_vista()
 
     def abrir_vista_crear_menu(self):
         pass
+
+    def remover_ultima_vista(self):
+        last_view = self._layout.itemAt(0).widget()
+        self._layout.removeWidget(last_view)
+        last_view.setParent(None)
