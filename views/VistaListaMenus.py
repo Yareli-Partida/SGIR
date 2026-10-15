@@ -13,6 +13,7 @@ class VistaListaMenus(QtWidgets.QWidget):
 
         self.titulo_principal = QtWidgets.QLabel("Menús")
         self.titulo_principal.setObjectName("titulo_principal")
+        self.titulo_principal.setProperty("cssClass", "titulo_principal")
 
         efecto_sombra = QtWidgets.QGraphicsDropShadowEffect(self)
         efecto_sombra.setOffset(1, 1)

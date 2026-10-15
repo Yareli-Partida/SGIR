@@ -28,6 +28,7 @@ class VistaRecetaDetalles(QtWidgets.QWidget):
         self.layout = QtWidgets.QGridLayout(self)
         self.titulo = QtWidgets.QLabel(receta.nombre)
         self.titulo.setObjectName("titulo_principal")
+        self.titulo.setProperty("cssClass", "titulo_principal")
 
         self.etiqueta_num_porciones = QtWidgets.QLabel(f"Porciones: {receta.num_porciones}")
         self.etiqueta_num_porciones.setObjectName("etiqueta_num_porciones")

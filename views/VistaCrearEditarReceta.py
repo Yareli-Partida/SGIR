@@ -12,6 +12,7 @@ class VistaCrearEditarReceta(QtWidgets.QWidget):
 
         self.titulo = QtWidgets.QLabel()
         self.titulo.setObjectName("titulo_principal")
+        self.titulo.setProperty("cssClass", "titulo_principal")
 
         self.botones_wrapper = QtWidgets.QWidget()
         self.botones_wrapper_layout = QtWidgets.QHBoxLayout()

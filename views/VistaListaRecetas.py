@@ -7,6 +7,7 @@ class VistaListaRecetas(QtWidgets.QWidget):
 
         self.titulo = QtWidgets.QLabel("Recetas")
         self.titulo.setObjectName("titulo_principal")
+        self.titulo.setProperty("cssClass", "titulo_principal")
 
         self.efecto_sombra = QtWidgets.QGraphicsDropShadowEffect(self)
         self.efecto_sombra.setOffset(1, 1)
