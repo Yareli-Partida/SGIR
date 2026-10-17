@@ -63,8 +63,8 @@ class VistaVentanaPrincipal(QtWidgets.QMainWindow):
 
     def crear_boton_ordenes_compra(self):
         list_compras_action_button = QtGui.QAction(QtGui.QIcon("views/resources/icons/icono_orden_compra.svg"),
-                                                   "&Lista de Compras", self)
-        list_compras_action_button.setStatusTip("Genera, actualiza y consulta ordenes de compras")
+                                                   "&Ordenes de Compra", self)
+        list_compras_action_button.setStatusTip("Genera, actualiza y consulta ordenes de compra")
         list_compras_action_button.triggered.connect(self.mostrar_ordenes_compra)
         return list_compras_action_button
 
