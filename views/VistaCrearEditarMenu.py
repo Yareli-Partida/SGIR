@@ -9,13 +9,11 @@ class VistaCrearEditarMenu(QtWidgets.QWidget):
 
         self.boton_volver = QtWidgets.QPushButton("Volver")
         self.boton_volver.setObjectName("boton_volver")
-        self.boton_volver.setFixedWidth(int(self.boton_volver.sizeHint().width() * 1.25))
         self.boton_volver.setProperty("cssClass", "boton_principal")
         self.estilizar_boton_principal(self.boton_volver)
 
         self.boton_guardar_menu = QtWidgets.QPushButton("Guardar")
         self.boton_guardar_menu.setObjectName("boton_guardar_menu")
-        self.boton_guardar_menu.setFixedWidth(int(self.boton_guardar_menu.sizeHint().width() * 1.25))
         self.boton_guardar_menu.setProperty("cssClass", "boton_principal")
         self.estilizar_boton_principal(self.boton_guardar_menu)
 
