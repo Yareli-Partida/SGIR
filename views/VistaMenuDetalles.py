@@ -1,104 +1,75 @@
-from PySide6 import QtWidgets, QtGui
+from PySide6.QtWidgets import *
+from PySide6.QtGui import Qt
 
+from models.Menu import Menu
 from models.Platillo import Platillo
+from views.widgets.BotonPrincipalWidget import BotonPrincipalWidget
+from views.widgets.TablaResponsivaDesigual import TablaResponsivaDesigual
+from views.widgets.EspacioHorizontalWidget import EspacioHorizontalWidget
 
+class VistaMenuDetalles(QVBoxLayout):
+    """
+    Vista para ver detalles de un menú.
 
-class VistaMenuDetalles(QtWidgets.QWidget):
-    def __init__(self, menu):
+    :param menu: (Menu): Menú a mostrar.
+
+    :var boton_volver: (BotonPrincipalWidget): Botón para volver a la vista anterior.
+    :var boton_editar_menu: (BotonPrincipalWidget): Botón para ir a la vista de editar con el menú actual.
+    :var contenedor_botones: (QWidget): Contiene los botones volver y editar.
+    :var titulo_principal: (QLabel): Título principal de la vista.
+    :var tabla_detalles_platillos: (QTableWidget): Tabla que muestra los platillos del menú.
+
+    """
+    def __init__(self, menu:Menu):
         super().__init__()
-        self.layout = QtWidgets.QVBoxLayout()
 
-        self.boton_volver = QtWidgets.QPushButton("Volver")
-        self.boton_volver.setObjectName("boton_volver")
-        self.boton_volver.setFixedWidth(int(self.boton_volver.sizeHint().width() * 1.25))
-        self.boton_volver.setProperty("cssClass", "boton_principal")
-        self.estilizar_boton_principal(self.boton_volver)
+        self.boton_volver = BotonPrincipalWidget("Volver")
+        self.boton_volver.setFixedWidth(self.boton_volver.sizeHint().width() * 2)
 
-        self.boton_editar_menu = QtWidgets.QPushButton("Editar")
-        self.boton_editar_menu.setObjectName("boton_editar_menu")
-        self.boton_editar_menu.setFixedWidth(int(self.boton_editar_menu.sizeHint().width() * 1.25))
-        self.boton_editar_menu.setProperty("cssClass", "boton_principal")
-        self.estilizar_boton_principal(self.boton_editar_menu)
+        self.boton_editar_menu = BotonPrincipalWidget("Editar")
+        self.boton_editar_menu.setFixedWidth(self.boton_editar_menu.sizeHint().width() * 2)
 
-        self.contenedor_botones = QtWidgets.QWidget()
-        self.contenedor_botones_layout = QtWidgets.QHBoxLayout()
-        self.contenedor_botones_layout.addWidget(self.boton_volver)
-        self.contenedor_botones_layout.addSpacerItem(QtWidgets.QSpacerItem(40, 20,
-                                                                  QtWidgets.QSizePolicy.Policy.Expanding,
-                                                                  QtWidgets.QSizePolicy.Policy.Minimum))
-        self.contenedor_botones_layout.addWidget(self.boton_editar_menu)
-        self.contenedor_botones.setLayout(self.contenedor_botones_layout)
+        self.contenedor_botones = QWidget()
+        self.contenedor_botones.setLayout(QHBoxLayout())
+        self.contenedor_botones.layout().addWidget(self.boton_volver)
+        self.contenedor_botones.layout().addSpacerItem(EspacioHorizontalWidget())
+        self.contenedor_botones.layout().addWidget(self.boton_editar_menu)
 
-        self.titulo_principal = QtWidgets.QLabel(menu.nombre)
+        self.titulo_principal = QLabel(menu.nombre)
         self.titulo_principal.setObjectName("titulo_principal_detalles")
         self.titulo_principal.setProperty("cssClass", "titulo_principal")
 
-        self.tabla_detalles_platillos = self.crear_tabla_platillos()
+        self.tabla_detalles_platillos = TablaResponsivaDesigual()
+        self.tabla_detalles_platillos.setShowGrid(False)
         self.tabla_detalles_platillos.setObjectName("tabla_detalles_platillos")
+        self.tabla_detalles_platillos.setColumnCount(3)
+        encabezados = ["Categoría", "Platillo", "Precio"]
+        self.tabla_detalles_platillos.setHorizontalHeaderLabels(encabezados)
 
-        self.layout.addWidget(self.contenedor_botones)
-        self.layout.addWidget(self.titulo_principal)
-        self.layout.addWidget(self.tabla_detalles_platillos)
+        self.addWidget(self.contenedor_botones)
+        self.addWidget(self.titulo_principal)
+        self.addWidget(self.tabla_detalles_platillos)
 
-        lista_test = [
-        Platillo(1, "Pasta en salsa de tomate", 150),
-        Platillo(2, "Puré de papas", 70),
-        Platillo(3, "Filete de res", 250),
-        Platillo(4, "Caldo de pollo", 180),
-        Platillo(5, "Café", 50),
-        ]
-        self.agregar_platillos_tabla(lista_test)
+    def agregar_platillos_tabla(self, lista_platillos:list[Platillo]) -> None:
+        """
+        Llena la tabla detalles platillos.
 
-        self.setLayout(self.layout)
+        :param lista_platillos: (list[Platillo]): Lista de los platillos por agregar.
+        :return:
+        """
 
-    def agregar_platillos_tabla(self, lista_platillos):
         self.tabla_detalles_platillos.setRowCount(len(lista_platillos))
         contador_fila = 0
 
         for platillo in lista_platillos:
-            platillo_nombre = QtWidgets.QTableWidgetItem(platillo.nombre)
-            platillo_precio = QtWidgets.QTableWidgetItem(f"${platillo.precio}")
-            platillo_precio.setTextAlignment(QtGui.Qt.AlignmentFlag.AlignVCenter)
+            platillo_nombre = QTableWidgetItem(platillo.nombre)
+            platillo_precio = QTableWidgetItem(f"${platillo.precio}")
+            platillo_precio.setTextAlignment(Qt.AlignmentFlag.AlignVCenter)
             # Categoria hard coded para testeo
-            platillo_categoria = QtWidgets.QTableWidgetItem("Platillo Fuerte")
+            platillo_categoria = QTableWidgetItem("Platillo Fuerte")
 
             self.tabla_detalles_platillos.setItem(contador_fila, 0, platillo_categoria)
             self.tabla_detalles_platillos.setItem(contador_fila, 1, platillo_nombre)
             self.tabla_detalles_platillos.setItem(contador_fila, 2, platillo_precio)
 
             contador_fila += 1
-
-        self.tabla_detalles_platillos.resizeColumnToContents(2)
-
-    def crear_tabla_platillos(self):
-        tabla_platillos = QtWidgets.QTableWidget()
-        encabezados = ["Categoría", "Platillo", "Precio"]
-        tabla_platillos.verticalHeader().hide()
-        tabla_platillos.setColumnCount(3)
-        tabla_platillos.setHorizontalHeaderLabels(encabezados)
-        tabla_platillos.setShowGrid(False)
-
-        efecto_sombra = QtWidgets.QGraphicsDropShadowEffect(self)
-        efecto_sombra.setOffset(1, 1)
-        efecto_sombra.setBlurRadius(4)
-        efecto_sombra.setColor(QtGui.QColor(122, 122, 133, 100))
-
-        tabla_platillos.setGraphicsEffect(efecto_sombra)
-
-        return tabla_platillos
-
-    def resizeEvent(self, event):
-        precio_col_ancho = self.tabla_detalles_platillos.columnWidth(2)
-        ancho_col = ((self.tabla_detalles_platillos.width() - precio_col_ancho) // 3) - 1
-
-        for i in range(2):
-            self.tabla_detalles_platillos.setColumnWidth(i, ancho_col * (i + 1))
-
-    def estilizar_boton_principal(self, boton):
-        efecto_sombra = QtWidgets.QGraphicsDropShadowEffect(self)
-        efecto_sombra.setOffset(1, 1)
-        efecto_sombra.setBlurRadius(4)
-        efecto_sombra.setColor(QtGui.QColor(122, 122, 133, 100))
-
-        boton.setFixedWidth(int(boton.sizeHint().width() * 2))
-        boton.setGraphicsEffect(efecto_sombra)
