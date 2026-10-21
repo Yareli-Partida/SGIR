@@ -40,7 +40,7 @@ class VistaCrearEditarMenu(QVBoxLayout):
 
         self.titulo = QLabel()
         self.titulo.setObjectName("titulo_crear_editar")
-        self.titulo.setProperty("cssClass", "titulo_principal")
+        self.titulo.setProperty("cssClass", "titulo")
 
         self.boton_agregar_platillo = BotonSecundarioWidget("Agregar platillo")
 

@@ -37,7 +37,7 @@ class VistaMenuDetalles(QVBoxLayout):
 
         self.titulo_principal = QLabel(menu.nombre)
         self.titulo_principal.setObjectName("titulo_principal_detalles")
-        self.titulo_principal.setProperty("cssClass", "titulo_principal")
+        self.titulo_principal.setProperty("cssClass", "titulo")
 
         self.tabla_detalles_platillos = TablaResponsivaDesigual()
         self.tabla_detalles_platillos.setShowGrid(False)

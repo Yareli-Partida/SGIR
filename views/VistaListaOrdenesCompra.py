@@ -23,7 +23,7 @@ class VistaListaOrdenesCompra(QVBoxLayout):
         self.setSpacing(45)
 
         self.titulo = QLabel("Ordenes de Compra")
-        self.titulo.setProperty("cssClass", "titulo_principal")
+        self.titulo.setProperty("cssClass", "titulo")
         self.titulo.setObjectName("titulo_principal_lista_ordenes")
 
         self.boton_crear_orden_compra = BotonPrincipalWidget("Crear orden")

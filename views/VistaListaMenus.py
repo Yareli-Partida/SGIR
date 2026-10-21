@@ -25,8 +25,8 @@ class VistaListaMenus(QGridLayout):
         self.lista_tarjetas_menu = []
 
         self.titulo_principal = QLabel("Menús")
-        self.titulo_principal.setObjectName("titulo_principal")
-        self.titulo_principal.setProperty("cssClass", "titulo_principal")
+        self.titulo_principal.setObjectName("titulo")
+        self.titulo_principal.setProperty("cssClass", "titulo")
 
         self.boton_crear_menu = BotonPrincipalWidget("Crear menú")
 

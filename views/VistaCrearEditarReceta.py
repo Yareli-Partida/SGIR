@@ -36,8 +36,8 @@ class VistaCrearEditarReceta(QVBoxLayout):
         super().__init__()
 
         self.titulo = QLabel()
-        self.titulo.setObjectName("titulo_principal")
-        self.titulo.setProperty("cssClass", "titulo_principal")
+        self.titulo.setObjectName("titulo")
+        self.titulo.setProperty("cssClass", "titulo")
 
         self.botones_contenedor = QWidget()
         self.botones_contenedor.setLayout(QHBoxLayout())

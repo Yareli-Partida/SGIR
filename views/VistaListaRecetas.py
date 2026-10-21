@@ -16,8 +16,8 @@ class VistaListaRecetas(QGridLayout):
         super().__init__()
 
         self.titulo = QLabel("Recetas")
-        self.titulo.setObjectName("titulo_principal")
-        self.titulo.setProperty("cssClass", "titulo_principal")
+        self.titulo.setObjectName("titulo")
+        self.titulo.setProperty("cssClass", "titulo")
 
         self.boton_crear_receta = BotonPrincipalWidget("Crear receta")
 

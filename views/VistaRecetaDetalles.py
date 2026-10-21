@@ -25,8 +25,8 @@ class VistaRecetaDetalles(QGridLayout):
         self.boton_volver.setFixedWidth(self.boton_volver.sizeHint().width() * 2)
 
         self.titulo = QLabel(receta.nombre)
-        self.titulo.setObjectName("titulo_principal")
-        self.titulo.setProperty("cssClass", "titulo_principal")
+        self.titulo.setObjectName("titulo")
+        self.titulo.setProperty("cssClass", "titulo")
 
         self.etiqueta_num_porciones = QLabel(f"Porciones: {receta.num_porciones}")
         self.etiqueta_num_porciones.setObjectName("etiqueta_num_porciones")
