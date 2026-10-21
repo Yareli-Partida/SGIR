@@ -70,7 +70,7 @@ QPushButton[cssClass="boton_secundario"]:hover {
     background-color: #CEB9F0;
 }
 
-QLabel[cssClass="titulo_principal"] {
+QLabel[cssClass="titulo"] {
     font-weight: bold;
     font-size: 20pt;
 }
