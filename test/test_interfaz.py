@@ -6,7 +6,7 @@ def test_tabla_inventario():
 
 def test_lista_recetas(qtbot, receta_datos_prueba):
     # En el __init__ de ControladorRecetas se encuentra una llamada a la función de
-    # mostrar_lista_recetas con un valor de testeo en la linea 31,
+    # mostrar_lista_recetas con un valor de testeo,
     # por lo que este test no funcionará, para que corra correctamente hay que comentar esa linea
     lista_errores = []
 
