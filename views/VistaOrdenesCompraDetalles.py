@@ -84,20 +84,21 @@ class VistaOrdenesCompraDetalles(QVBoxLayout):
         :return:
         """
 
-        encabezados = ["", "Nombre insumo", "Cantidad", "Unidad de medida", "Importe"]
+        encabezados = ["", "Nombre insumo", "Cantidad", "Unidad de medida",  "Fecha de compra", "Importe"]
 
-        self.tabla_lista_compras.setColumnCount(5)
+        self.tabla_lista_compras.setColumnCount(6)
         self.tabla_lista_compras.setHorizontalHeaderLabels(encabezados)
         self.tabla_lista_compras.setShowGrid(False)
 
-    def crear_fila_tabla(self, nombre_insumo:str, cant:float, unidad_med:str, importe:float) -> None:
+    def crear_fila_tabla(self, nombre_insumo:str, cant:float, unidad_med:str, importe=None, fecha_compra=None) -> None:
         """
         Crea una fila en la tabla con los datos de un insumo a comprar.
 
         :param nombre_insumo: (str): Nombre del insumo que se mostrará.
         :param cant: (float): Cantidad que se comprará del insumo.
         :param unidad_med: (str): Unidad de medida de la compra.
-        :param importe: (float): Precio de la compra, solo aplica si ya se compró
+        :param importe: (None/float): Precio de la compra, solo aplica si ya se compró
+        :param fecha_compra: (None/str): Fecha de compra del producto si ya se compró, opcional.
         :return:
         """
 
@@ -122,11 +123,23 @@ class VistaOrdenesCompraDetalles(QVBoxLayout):
         celda_unidad_medida = QTableWidgetItem(str(unidad_med))
         celda_unidad_medida.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        celda_importe = QTableWidgetItem(str(importe))
+        if fecha_compra:
+            celda_fecha_compra = QTableWidgetItem(str(fecha_compra))
+        else:
+            celda_fecha_compra = QTableWidgetItem("N/A")
+
+        celda_fecha_compra.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        if importe:
+            celda_importe = QTableWidgetItem(str(importe))
+        else:
+            celda_importe = QTableWidgetItem("N/A")
+
         celda_importe.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.tabla_lista_compras.setCellWidget(fila_idx, 0, contenedor_checkbox)
         self.tabla_lista_compras.setItem(fila_idx, 1, celda_nombre_insumo)
         self.tabla_lista_compras.setItem(fila_idx, 2, celda_cantidad)
         self.tabla_lista_compras.setItem(fila_idx, 3, celda_unidad_medida)
-        self.tabla_lista_compras.setItem(fila_idx, 4, celda_importe)
+        self.tabla_lista_compras.setItem(fila_idx, 4, celda_fecha_compra)
+        self.tabla_lista_compras.setItem(fila_idx, 5, celda_importe)
