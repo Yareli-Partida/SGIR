@@ -1,9 +1,15 @@
-from PySide6.QtWidgets import QTableWidget, QGraphicsDropShadowEffect
+from PySide6.QtWidgets import QTableWidget, QGraphicsDropShadowEffect, QAbstractItemView
 from PySide6.QtGui import QColor
 
 class TablaResponsivaRegular(QTableWidget):
+    """
+    Tabla configurada para que sus columnas sean y crezcan al mismo tamaño.
+    """
+
     def __init__(self):
         super().__init__()
+
+        self.verticalHeader().hide()
 
         efecto_sombra = QGraphicsDropShadowEffect(self)
         efecto_sombra.setOffset(1, 1)
