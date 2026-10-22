@@ -21,14 +21,6 @@ class Receta:
         self._nombre = value
 
     @property
-    def instrucciones(self):
-        return self._instrucciones
-
-    @instrucciones.setter
-    def instrucciones(self, value):
-        self._instrucciones = value
-
-    @property
     def num_porciones(self):
         return self._num_porciones
 
