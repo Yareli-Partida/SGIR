@@ -1,3 +1,4 @@
+from PySide6 import QtCore
 from PySide6.QtWidgets import *
 from PySide6.QtGui import Qt
 
@@ -38,7 +39,8 @@ class VistaOrdenesCompraDetalles(QVBoxLayout):
         self.contenedor_botones.layout().addSpacerItem(EspacioHorizontalWidget())
         self.contenedor_botones.layout().addWidget(self.boton_editar)
 
-        self.titulo = QLabel(f"Orden #{orden_compra.num}")
+        self.titulo = QLabel(f"Detalles Orden #{orden_compra.num}")
+        self.titulo.setObjectName("titulo_principal_detalles")
         self.titulo.setProperty("cssClass", "titulo")
 
         self.etiqueta_fecha_creacion = QLabel(f"Fecha de creación: {orden_compra.fecha_creacion}",
@@ -56,7 +58,7 @@ class VistaOrdenesCompraDetalles(QVBoxLayout):
         # Aún no hay propiedad estado_orden en la clase
         self.etiqueta_edo_orden = QLabel("En Progreso", alignment=Qt.AlignmentFlag.AlignCenter)
         self.etiqueta_edo_orden.setFixedWidth(int(self.etiqueta_edo_orden.sizeHint().width() * 1.25))
-        self.etiqueta_edo_orden.setFixedHeight(int(self.etiqueta_edo_orden.sizeHint().height() * 1.25))
+        self.etiqueta_edo_orden.setFixedHeight(int(self.etiqueta_edo_orden.sizeHint().height() * 2))
         self.etiqueta_edo_orden.setObjectName("etiqueta_edo_orden")
 
         if self.etiqueta_edo_orden.text() == "En Progreso":
@@ -108,34 +110,43 @@ class VistaOrdenesCompraDetalles(QVBoxLayout):
         # checkbox marcado en función de si ya se compró o no
         contenedor_checkbox = QWidget()
         contenedor_checkbox.setLayout(QHBoxLayout())
-        contenedor_checkbox.layout().setAlignment(Qt.AlignmentFlag.AlignCenter)
+        contenedor_checkbox.layout().setAlignment(Qt.AlignmentFlag.AlignHCenter)
         checkbox = QCheckBox()
-        checkbox.setChecked(False)
-        checkbox.setEnabled(False)
+        checkbox.setFixedWidth(int(checkbox.sizeHint().width() * 1.5))
+        checkbox.setFixedHeight(int(checkbox.sizeHint().height() * 1.5))
         contenedor_checkbox.layout().addWidget(checkbox)
 
         celda_nombre_insumo = QTableWidgetItem(nombre_insumo)
+        celda_nombre_insumo.setFlags(QtCore.Qt.ItemFlag.ItemIsEditable)
         celda_nombre_insumo.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
 
         celda_cantidad = QTableWidgetItem(str(cant))
+        celda_cantidad.setFlags(QtCore.Qt.ItemFlag.ItemIsEditable)
         celda_cantidad.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
 
         celda_unidad_medida = QTableWidgetItem(str(unidad_med))
+        celda_unidad_medida.setFlags(QtCore.Qt.ItemFlag.ItemIsEditable)
         celda_unidad_medida.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
 
         if fecha_compra:
             celda_fecha_compra = QTableWidgetItem(str(fecha_compra))
+            checkbox.setChecked(True)
+            checkbox.setEnabled(False)
         else:
+            checkbox.setChecked(False)
+            checkbox.setEnabled(False)
             celda_fecha_compra = QTableWidgetItem("N/A")
 
         celda_fecha_compra.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
+        celda_fecha_compra.setFlags(QtCore.Qt.ItemFlag.ItemIsEditable)
 
         if importe:
-            celda_importe = QTableWidgetItem(str(importe))
+            celda_importe = QTableWidgetItem(f"${importe}")
         else:
             celda_importe = QTableWidgetItem("N/A")
 
         celda_importe.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
+        celda_importe.setFlags(QtCore.Qt.ItemFlag.ItemIsEditable)
 
         self.tabla_lista_compras.setCellWidget(fila_idx, 0, contenedor_checkbox)
         self.tabla_lista_compras.setItem(fila_idx, 1, celda_nombre_insumo)
