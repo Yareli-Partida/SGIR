@@ -84,13 +84,13 @@ class VistaOrdenesCompraDetalles(QVBoxLayout):
         :return:
         """
 
-        encabezados = ["", "Nombre insumo", "Cantidad", "Unidad de medida",  "Fecha de compra", "Importe"]
+        encabezados = ["Comprado", "Insumo", "Cantidad", "Unidad de medida",  "Fecha de compra", "Importe"]
 
         self.tabla_lista_compras.setColumnCount(6)
         self.tabla_lista_compras.setHorizontalHeaderLabels(encabezados)
         self.tabla_lista_compras.setShowGrid(False)
 
-    def crear_fila_tabla(self, nombre_insumo:str, cant:float, unidad_med:str, importe=None, fecha_compra=None) -> None:
+    def crear_fila_tabla(self, nombre_insumo:str, cant:float, unidad_med:str, fecha_compra=None, importe=None) -> None:
         """
         Crea una fila en la tabla con los datos de un insumo a comprar.
 
@@ -110,7 +110,7 @@ class VistaOrdenesCompraDetalles(QVBoxLayout):
         contenedor_checkbox.setLayout(QHBoxLayout())
         contenedor_checkbox.layout().setAlignment(Qt.AlignmentFlag.AlignCenter)
         checkbox = QCheckBox()
-        checkbox.setChecked(True)
+        checkbox.setChecked(False)
         checkbox.setEnabled(False)
         contenedor_checkbox.layout().addWidget(checkbox)
 
