@@ -3,6 +3,7 @@ from pathlib import Path
 
 from views.VistaListaOrdenesCompra import VistaListaOrdenesCompra
 from views.VistaOrdenesCompraDetalles import VistaOrdenesCompraDetalles
+from views.VistaCrearEditarOrdenCompra import VistaCrearEditarOrdenCompra
 from views.widgets.BotonSecundarioWidget import BotonSecundarioWidget
 from models.OrdenCompra import OrdenCompra
 from models.Insumo import Insumo
@@ -12,6 +13,7 @@ class ControladorOrdenesCompra(QWidget):
         super().__init__()
         self.vista_lista_ordenes_compra = None
         self.vista_orden_compra_detalles = None
+        self.vista_editar_orden_compra = None
 
         self.abrir_vista_lista_ordenes_compra()
 
@@ -85,10 +87,42 @@ class ControladorOrdenesCompra(QWidget):
         ]
 
         for entrada in lista_insumos_test:
-            self.vista_orden_compra_detalles.crear_fila_tabla(entrada.nombre, 5, "kilos", "")
+            if entrada.num == 4:
+                self.vista_orden_compra_detalles.crear_fila_tabla(entrada.nombre, 5, "kilos", "21-10-2026", 586)
+                continue
+
+            self.vista_orden_compra_detalles.crear_fila_tabla(entrada.nombre, 5, "kilos")
 
     def abrir_vista_editar_orden_compra(self, orden_compra:OrdenCompra) -> None :
-        pass
+        """
+        Crea un obj de VistaCrearEditarOrdenCompra con el arg orden_compra, conecta los botones de la vista a sus
+        respectivas funciones y cambia el layout actual.
+
+        :param orden_compra: (OrdenCompra): La orden que se va a editar.
+        :return:
+        """
+
+        self.vista_editar_orden_compra = VistaCrearEditarOrdenCompra(orden_compra)
+        self.vista_editar_orden_compra.boton_volver.clicked.connect(lambda: self.abrir_vista_detalles(orden_compra))
+        self.llenar_tabla_editar(orden_compra)
+
+        self.remover_ultima_vista()
+        self.setLayout(self.vista_editar_orden_compra)
+
+    def llenar_tabla_editar(self, orden_compra:OrdenCompra) -> None:
+        lista_insumos_test = [
+            Insumo(1, "Arroz", None, None, None, None, None, None),
+            Insumo(2, "Papas", None, None, None, None, None, None),
+            Insumo(3, "Pescado", None, None, None, None, None, None),
+            Insumo(4, "Tomate", None, None, None, None, None, None)
+        ]
+
+        for entrada in lista_insumos_test:
+            if entrada.num == 4:
+                self.vista_editar_orden_compra.agregar_fila_tabla_compras(entrada.nombre, 5, "kilos", "21-10-2026", 586)
+                continue
+
+            self.vista_editar_orden_compra.agregar_fila_tabla_compras(entrada.nombre, 5, "kilos")
 
     def remover_ultima_vista(self) -> None:
         """
