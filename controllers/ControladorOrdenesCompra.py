@@ -14,6 +14,7 @@ class ControladorOrdenesCompra(QWidget):
         self.vista_lista_ordenes_compra = None
         self.vista_orden_compra_detalles = None
         self.vista_editar_orden_compra = None
+        self.vista_crear_orden_compra = None
 
         self.abrir_vista_lista_ordenes_compra()
 
@@ -50,8 +51,17 @@ class ControladorOrdenesCompra(QWidget):
             boton_ver_orden.clicked.connect(lambda state, orden_obj=orden: self.abrir_vista_detalles(orden_obj))
             self.vista_lista_ordenes_compra.crear_fila_tabla_ordenes_compra(orden, boton_ver_orden)
 
-    def abrir_vista_crear_orden(self):
-        pass
+    def abrir_vista_crear_orden(self) -> None:
+        """
+        Crea un obj de VistaCrearEditarOrdenCompra, conecta los botones de la vista a sus respectivas funciones
+        y cambia el layout actual.
+        """
+
+        self.vista_crear_orden_compra = VistaCrearEditarOrdenCompra()
+        self.vista_crear_orden_compra.boton_volver.clicked.connect(self.abrir_vista_lista_ordenes_compra)
+
+        self.remover_ultima_vista()
+        self.setLayout(self.vista_crear_orden_compra)
 
     def abrir_vista_detalles(self, orden_compra:OrdenCompra) -> None:
         """
