@@ -74,3 +74,26 @@ QLabel[cssClass="titulo"] {
     font-weight: bold;
     font-size: 20pt;
 }
+
+QTableWidget::item {
+    margin-top: 0.25em;
+    background-color: #FFFFFF;
+}
+
+QTableWidget::item:focus {
+    background-color: #BCDCF4;
+    color: #1E1E1E;
+}
+
+QTableWidget {
+    border: 1px solid #E0E0E0;
+    border-radius: 5px;
+    selection-background-color: #FFFFFF;
+}
+QTableWidget::item:top {
+background-color: orange
+}
+
+QComboBox, QLineEdit, QDateEdit, QSpinBox, QDoubleSpinBox {
+    selection-background-color: #BCDCF4;
+}
