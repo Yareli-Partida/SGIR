@@ -1,3 +1,4 @@
+from PySide6 import QtCore
 from PySide6.QtWidgets import *
 from PySide6.QtGui import Qt
 
@@ -63,10 +64,15 @@ class VistaMenuDetalles(QVBoxLayout):
 
         for platillo in lista_platillos:
             platillo_nombre = QTableWidgetItem(platillo.nombre)
+            platillo_nombre.setFlags(QtCore.Qt.ItemFlag.ItemIsEditable)
+
             platillo_precio = QTableWidgetItem(f"${platillo.precio}")
             platillo_precio.setTextAlignment(Qt.AlignmentFlag.AlignVCenter)
+            platillo_precio.setFlags(QtCore.Qt.ItemFlag.ItemIsEditable)
+
             # Categoria hard coded para testeo
             platillo_categoria = QTableWidgetItem("Platillo Fuerte")
+            platillo_categoria.setFlags(QtCore.Qt.ItemFlag.ItemIsEditable)
 
             self.tabla_detalles_platillos.setItem(contador_fila, 0, platillo_categoria)
             self.tabla_detalles_platillos.setItem(contador_fila, 1, platillo_nombre)
