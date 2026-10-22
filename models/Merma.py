@@ -1,5 +1,5 @@
 class Merma:
-    def __init__(self, num, fecha, descripcion, cantidad, unidad_medida):
+    def __init__(self, num, descripcion, fecha, unidad_medida, cantidad):
         self._num = num
         self._fecha = fecha
         self._descripcion = descripcion
@@ -15,6 +15,15 @@ class Merma:
         self._num = value
 
     @property
+    def descripcion(self):
+        return self._descripcion
+
+    @descripcion.setter
+    def descripcion(self, value):
+        self._descripcion = value
+
+
+    @property
     def fecha(self):
         return self._fecha
 
@@ -23,12 +32,12 @@ class Merma:
         self._fecha = value
 
     @property
-    def descripcion(self):
-        return self._descripcion
+    def unidad_medida(self):
+        return self._unidad_medida
 
-    @descripcion.setter
-    def descripcion(self, value):
-        self._descripcion = value
+    @unidad_medida.setter
+    def unidad_medida(self, value):
+        self._unidad_medida = value
 
     @property
     def cantidad(self):
@@ -37,11 +46,3 @@ class Merma:
     @cantidad.setter
     def cantidad(self, value):
         self._cantidad = value
-
-    @property
-    def unidad_medida(self):
-        return self._unidad_medida
-
-    @unidad_medida.setter
-    def unidad_medida(self, value):
-        self._unidad_medida = value

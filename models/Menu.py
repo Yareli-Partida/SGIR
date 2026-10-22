@@ -1,8 +1,8 @@
 class Menu:
-    def __init__(self, num, nombre, cantidad_recetas=0):
+    def __init__(self, num, nombre, cantidad_platillos=0):
         self._num = num
         self._nombre = nombre
-        self._cantidad_recetas = cantidad_recetas 
+        self._cantidad_platillos = cantidad_platillos 
 
     @property
     def num(self):
@@ -21,9 +21,9 @@ class Menu:
         self._nombre = value
 
     @property
-    def cantidad_recetas(self):
-        return self._cantidad_recetas
+    def cantidad_platillos(self):
+        return self._cantidad_platillos
 
-    @cantidad_recetas.setter
-    def cantidad_recetas(self, value):
-        self._cantidad_recetas = value
+    @cantidad_platillos.setter
+    def cantidad_platillos(self, value):
+        self._cantidad_platillos = value

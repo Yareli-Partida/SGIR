@@ -1,8 +1,7 @@
 class Receta:
-    def __init__(self, num, nombre, instrucciones, num_porciones):
+    def __init__(self, num, nombre, num_porciones):
         self._num = num
         self._nombre = nombre
-        self._instrucciones = instrucciones
         self._num_porciones = num_porciones
 
     @property
@@ -20,14 +19,6 @@ class Receta:
     @nombre.setter
     def nombre(self, value):
         self._nombre = value
-
-    @property
-    def instrucciones(self):
-        return self._instrucciones
-
-    @instrucciones.setter
-    def instrucciones(self, value):
-        self._instrucciones = value
 
     @property
     def num_porciones(self):
