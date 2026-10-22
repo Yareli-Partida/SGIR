@@ -1,3 +1,4 @@
+from PySide6 import QtCore
 from PySide6.QtGui import Qt, QColor
 from PySide6.QtWidgets import *
 
@@ -59,12 +60,15 @@ class VistaListaOrdenesCompra(QVBoxLayout):
 
         orden_compra_num = QTableWidgetItem(str(orden_compra.num))
         orden_compra_num.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
+        orden_compra_num.setFlags(QtCore.Qt.ItemFlag.ItemIsEditable)
 
         orden_compra_fecha_creacion = QTableWidgetItem(orden_compra.fecha_creacion)
         orden_compra_fecha_creacion.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
+        orden_compra_fecha_creacion.setFlags(QtCore.Qt.ItemFlag.ItemIsEditable)
         # hardcoded para testeo
         orden_estado = QTableWidgetItem("En Progreso")
         orden_estado.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
+        orden_estado.setFlags(QtCore.Qt.ItemFlag.ItemIsEditable)
 
         if orden_estado.text() == "En Progreso":
             orden_estado.setBackground(QColor.fromRgb(255, 178, 0))
