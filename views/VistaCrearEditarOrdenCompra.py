@@ -1,3 +1,4 @@
+from PySide6 import QtCore
 from PySide6.QtCore import QDateTime, QDate
 from PySide6.QtWidgets import *
 from PySide6.QtGui import Qt
@@ -10,12 +11,26 @@ from views.widgets.BotonSecundarioWidget import BotonSecundarioWidget
 from views.widgets.TablaResponsivaRegular import TablaResponsivaRegular
 
 class VistaCrearEditarOrdenCompra(QVBoxLayout):
+    """
+    Vista para crear y editar órdenes de compra.
+
+    :param orden_compra: (None/OrdenCompra): Orden de compra a editar.
+
+    :var titulo: (QLabel): Título principal de la vista.
+    :var contenedor_botones: (QWidget): Contiene los botones guardar y volver.
+    :var boton_guardar: (BotonPrincipalWidget): Botón para guardar la info actual en la forma en la orden actual o una nueva.
+    :var boton_volver: (BotonPrincipalWidget): Botón para volver a la vista anterior.
+    :var boton_agregar_insumo: (BotonSecundarioWidget): Botón para agregar una nueva fila a la tabla lista compras.
+    :var tabla_lista_compras: (TablaResponsivaRegular): Muestra los insumos de la lista de compras de la orden.
+    """
+
     def __init__(self, orden_compra=None):
         super().__init__()
 
         self.setSpacing(15)
 
         self.titulo = QLabel()
+        self.titulo.setObjectName("titulo_principal_editar_crear")
         self.titulo.setProperty("cssClass", "titulo")
 
         self.contenedor_botones = QWidget()
@@ -35,7 +50,7 @@ class VistaCrearEditarOrdenCompra(QVBoxLayout):
         self.configurar_tabla_compras()
 
         if orden_compra:
-            self.titulo.setText(f"Editar {orden_compra.num}")
+            self.titulo.setText(f"Editar Orden #{orden_compra.num}")
         else:
             self.titulo.setText("Crear orden de compra")
 
@@ -51,7 +66,7 @@ class VistaCrearEditarOrdenCompra(QVBoxLayout):
         """
 
         self.tabla_lista_compras.setColumnCount(6)
-        encabezados = ["Marcar comprado", "Insumo", "Cantidad", "Unidad de medida",  "Fecha de compra", "Importe"]
+        encabezados = ["Comprado", "Insumo", "Cantidad", "Unidad de medida",  "Fecha de compra", "Importe"]
         self.tabla_lista_compras.setHorizontalHeaderLabels(encabezados)
 
     def agregar_fila_tabla_compras(self, nom_insumo=None, cant=None, un_medida=None, fecha_compra=None, importe=None) -> None:
@@ -79,6 +94,8 @@ class VistaCrearEditarOrdenCompra(QVBoxLayout):
         contenedor_checkbox.setLayout(QHBoxLayout())
         contenedor_checkbox.layout().setAlignment(Qt.AlignmentFlag.AlignCenter)
         checkbox_comprado = QCheckBox()
+        checkbox_comprado.setFixedWidth(int(checkbox_comprado.sizeHint().width() * 1.5))
+        checkbox_comprado.setFixedHeight(int(checkbox_comprado.sizeHint().height() * 1.5))
         checkbox_comprado.setEnabled(True)
         checkbox_comprado.stateChanged.connect(lambda state, idx=fila_idx, cb=checkbox_comprado: self.toggle_selectores_opcionales(cb, idx))
         contenedor_checkbox.layout().addWidget(checkbox_comprado)
@@ -129,6 +146,15 @@ class VistaCrearEditarOrdenCompra(QVBoxLayout):
         self.tabla_lista_compras.setCellWidget(fila_idx, 2, selector_cantidad)
         self.tabla_lista_compras.setCellWidget(fila_idx, 3, selector_unidad_medida)
 
+        celda_placeholder_1 = QTableWidgetItem()
+        celda_placeholder_1.setFlags(QtCore.Qt.ItemFlag.ItemIsEditable)
+
+        celda_placeholder_2 = QTableWidgetItem()
+        celda_placeholder_2.setFlags(QtCore.Qt.ItemFlag.ItemIsEditable)
+
+        self.tabla_lista_compras.setItem(fila_idx, 4, celda_placeholder_1)
+        self.tabla_lista_compras.setItem(fila_idx, 5, celda_placeholder_2)
+
     def toggle_selectores_opcionales(self, checkbox:QCheckBox, fila_idx:int) -> None:
         """
         Agrega o quita los selectores opcionales de fecha de compra e importe cuando el producto
@@ -143,8 +169,14 @@ class VistaCrearEditarOrdenCompra(QVBoxLayout):
         if checkbox.isChecked():
             self.agregar_selectores_opcionales(fila_idx)
         else:
+            celda_placeholder = QTableWidgetItem()
+            celda_placeholder.setFlags(QtCore.Qt.ItemFlag.ItemIsEditable)
+
             self.tabla_lista_compras.removeCellWidget(fila_idx, 4)
+            self.tabla_lista_compras.setItem(fila_idx, 4, celda_placeholder)
+
             self.tabla_lista_compras.removeCellWidget(fila_idx, 5)
+            self.tabla_lista_compras.setItem(fila_idx, 5, celda_placeholder)
 
     def agregar_selectores_opcionales(self, fila_idx) -> None:
         """
