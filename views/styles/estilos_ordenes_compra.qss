@@ -17,3 +17,7 @@ QLabel#etiqueta_edo_orden {
 QTableWidget#tabla_lista_compras {
     margin-top: 1em;
 }
+
+QCheckBox {
+    background-color: #CAC4D0;
+}
