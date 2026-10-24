@@ -1,5 +1,8 @@
-from PySide6.QtGui import Qt, QColor
+from pathlib import Path
+
+from PySide6.QtGui import Qt, QColor, QResizeEvent
 from PySide6.QtWidgets import *
+from PySide6.QtCore import Signal
 
 from models.Menu import Menu
 from models.Platillo import Platillo
@@ -7,21 +10,29 @@ from views.widgets.BotonPrincipalWidget import BotonPrincipalWidget
 from views.widgets.BotonSecundarioWidget import BotonSecundarioWidget
 from views.widgets.EspacioHorizontalWidget import EspacioHorizontalWidget
 
-class VistaListaMenus(QGridLayout):
+class VistaListaMenus(QWidget):
     """
     Vista de la lista de todos los menús.
 
+    :var mostrar_menus_signal: (Signal): Señal para enlistar todos los menús.
+    :var abrir_crear_menu_signal: (Signal): Señal para ir a la vista de crear.
+    :var abrir_detalles_signal: (Signal(Menu)): Señal para ir a la vista de detalles.
     :var lista_tarjetas_menu: (list[QWidget]): Guarda la referencia a todas las tarjetas.
     :var titulo_principal: (QLabel): Título principal de la vista.
     :var boton_crear_menu: (BotonPrincipalWidget): Botón para ir a la vista para crear menú.
 
     """
 
+    mostrar_menus_signal = Signal()
+    abrir_crear_menu_signal = Signal()
+    abrir_detalles_signal = Signal(Menu)
+
     def __init__(self):
         super().__init__()
 
-        self.setAlignment(Qt.AlignmentFlag.AlignTop)
-        self.setVerticalSpacing(50)
+        self.layout = QGridLayout()
+        self.layout.setAlignment(Qt.AlignmentFlag.AlignTop)
+        self.layout.setVerticalSpacing(50)
         self.lista_tarjetas_menu = []
 
         self.titulo_principal = QLabel("Menús")
@@ -29,9 +40,13 @@ class VistaListaMenus(QGridLayout):
         self.titulo_principal.setProperty("cssClass", "titulo")
 
         self.boton_crear_menu = BotonPrincipalWidget("Crear menú")
+        self.boton_crear_menu.clicked.connect(self.emitir_evento_abrir_crear_menu)
 
-        self.addWidget(self.titulo_principal, 0, 0)
-        self.addWidget(self.boton_crear_menu, 0, 3, alignment=Qt.AlignmentFlag.AlignRight)
+        self.layout.addWidget(self.titulo_principal, 0, 0)
+        self.layout.addWidget(self.boton_crear_menu, 0, 3, alignment=Qt.AlignmentFlag.AlignRight)
+        self.setLayout(self.layout)
+
+        self.setStyleSheet((Path('views/styles/estilos_menus.qss').read_text()))
 
     def crear_tarjeta_menu(self, menu:Menu, platillos:list[Platillo]) -> QWidget:
         """
@@ -62,6 +77,7 @@ class VistaListaMenus(QGridLayout):
         etiqueta_nombre_menu.setWordWrap(True)
         boton_ver_mas = BotonSecundarioWidget("Ver más")
         boton_ver_mas.setObjectName(f"{menu.nombre}")
+        boton_ver_mas.clicked.connect(lambda: self.emitir_evento_abrir_detalles_menu(menu))
 
         contenedor_titulo_menu_layout.addWidget(etiqueta_nombre_menu)
         contenedor_titulo_menu_layout.addSpacerItem(EspacioHorizontalWidget())
@@ -92,13 +108,28 @@ class VistaListaMenus(QGridLayout):
 
         return tarjeta
 
-    def ajustar_tarjetas(self) -> None:
+    def emitir_evento_abrir_crear_menu(self) -> None:
         """
-        Ajusta el tamaño de cada tarjeta al ancho actual del Parent Widget
-        :return:
+        Emite la señal para abrir la vista de crear menú.
+        """
+
+        self.abrir_crear_menu_signal.emit()
+
+    def emitir_evento_abrir_detalles_menu(self, menu:Menu) -> None:
+        """
+        Emite la señal para abrir la vista de detalles.
+        """
+
+        self.abrir_detalles_signal.emit(menu)
+
+    def resizeEvent(self, event:QResizeEvent) -> None:
+        """
+        Hace override a la función resizeEvent para ajustar el tamaño de cada tarjeta al ancho actual del widget.
+
+        :param event: (QResizeEvent)
         """
 
         for tarjeta in self.lista_tarjetas_menu:
-            tarjeta.setFixedWidth(self.parentWidget().width() // 3)
+            tarjeta.setFixedWidth(self.width() // 3)
 
-        self.maximumSize().setHeight(self.parentWidget().sizeHint().height())
+        self.maximumSize().setHeight(self.sizeHint().height())

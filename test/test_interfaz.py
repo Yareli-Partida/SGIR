@@ -1,16 +1,16 @@
-from controllers.ControladorRecetas import ControladorRecetas
+from controllers.ControladorListaRecetas import ControladorListaRecetas
 from datos_de_prueba import *
 
 def test_tabla_inventario():
     pass
 
 def test_lista_recetas(qtbot, receta_datos_prueba):
-    # En el __init__ de ControladorRecetas se encuentra una llamada a la función de
+    # En el __init__ de ControladorListaRecetas se encuentra una llamada a la función de
     # mostrar_lista_recetas con un valor de testeo,
     # por lo que este test no funcionará, para que corra correctamente hay que comentar esa linea
     lista_errores = []
 
-    widget = ControladorRecetas()
+    widget = ControladorListaRecetas()
     # el qtbot va a inicializar el widget y correr la función para agregar recetas
     qtbot.addWidget(widget)
     widget.mostrar_lista_recetas(receta_datos_prueba)
@@ -30,7 +30,7 @@ def test_lista_recetas(qtbot, receta_datos_prueba):
     assert lista_errores.count(True) == 0
 
 def test_abrir_detalles_recetas(qtbot, receta_datos_prueba):
-    widget = ControladorRecetas()
+    widget = ControladorListaRecetas()
     qtbot.addWidget(widget)
     widget.mostrar_lista_recetas(receta_datos_prueba)
     ui = widget._vista_lista_recetas

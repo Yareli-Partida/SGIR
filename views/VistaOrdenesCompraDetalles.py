@@ -1,18 +1,25 @@
+from pathlib import Path
+
 from PySide6 import QtCore
 from PySide6.QtWidgets import *
 from PySide6.QtGui import Qt
+from PySide6.QtCore import Signal
 
+from models.Menu import Menu
 from models.OrdenCompra import OrdenCompra
 from views.widgets.EspacioHorizontalWidget import EspacioHorizontalWidget
 from views.widgets.BotonPrincipalWidget import BotonPrincipalWidget
 from views.widgets.TablaResponsivaDesigual import TablaResponsivaDesigual
 
-class VistaOrdenesCompraDetalles(QVBoxLayout):
+class VistaOrdenesCompraDetalles(QWidget):
     """
     Vista para ver detalles de una orden de compra.
 
     :param orden_compra: (OrdenCompra): Orden de compra a mostrar.
 
+    :var mostrar_detalles_signal: (Signal(OrdenCompra)): Señal para ir a la vista de detalles.
+    :var volver_vista_anterior_signal: (Signal): Señal para ir a la vista anterior.
+    :var abrir_vista_editar_orden_signal: (Signal(OrdenCompra)): Señal para ir a la vista de editar.
     :var contenedor_botones: (QWidget): Contiene los botones volver y editar.
     :var boton_volver: (BotonPrincipalWidget): Botón para ir a la vista anterior.
     :var boton_editar: (BotonPrincipalWidget): Botón para ir a la vista editar con la orden de compra actual.
@@ -24,17 +31,24 @@ class VistaOrdenesCompraDetalles(QVBoxLayout):
 
     """
 
+    mostrar_detalles_signal = Signal(OrdenCompra)
+    volver_vista_anterior_signal = Signal()
+    abrir_vista_editar_orden_signal = Signal(OrdenCompra)
+
     def __init__(self, orden_compra:OrdenCompra):
         super().__init__()
 
-        self.setSpacing(15)
+        self.layout = QVBoxLayout()
+        self.layout.setSpacing(15)
 
         self.contenedor_botones = QWidget()
         self.contenedor_botones.setLayout(QHBoxLayout())
         self.boton_volver = BotonPrincipalWidget("Volver")
         self.boton_volver.setFixedWidth(self.boton_volver.sizeHint().width() * 2)
+        self.boton_volver.clicked.connect(self.emitir_evento_volver)
         self.boton_editar = BotonPrincipalWidget("Editar")
         self.boton_editar.setFixedWidth(self.boton_editar.sizeHint().width() * 2)
+        self.boton_editar.clicked.connect(lambda: self.emitir_evento_editar_orden(orden_compra))
         self.contenedor_botones.layout().addWidget(self.boton_volver)
         self.contenedor_botones.layout().addSpacerItem(EspacioHorizontalWidget())
         self.contenedor_botones.layout().addWidget(self.boton_editar)
@@ -72,12 +86,16 @@ class VistaOrdenesCompraDetalles(QVBoxLayout):
         self.tabla_lista_compras.setObjectName("tabla_lista_compras")
         self.configurar_tabla_lista_compras()
 
-        self.addWidget(self.contenedor_botones)
-        self.addWidget(self.titulo)
-        self.addWidget(self.etiqueta_fecha_creacion)
-        self.addWidget(self.etiqueta_fecha_cierre)
-        self.addWidget(self.etiqueta_edo_orden)
-        self.addWidget(self.tabla_lista_compras)
+        self.layout.addWidget(self.contenedor_botones)
+        self.layout.addWidget(self.titulo)
+        self.layout.addWidget(self.etiqueta_fecha_creacion)
+        self.layout.addWidget(self.etiqueta_fecha_cierre)
+        self.layout.addWidget(self.etiqueta_edo_orden)
+        self.layout.addWidget(self.tabla_lista_compras)
+
+        self.setLayout(self.layout)
+
+        self.setStyleSheet((Path('views/styles/estilos_ordenes_compra.qss').read_text()))
 
     def configurar_tabla_lista_compras(self) -> None:
         """
@@ -154,3 +172,17 @@ class VistaOrdenesCompraDetalles(QVBoxLayout):
         self.tabla_lista_compras.setItem(fila_idx, 3, celda_unidad_medida)
         self.tabla_lista_compras.setItem(fila_idx, 4, celda_fecha_compra)
         self.tabla_lista_compras.setItem(fila_idx, 5, celda_importe)
+
+    def emitir_evento_volver(self) -> None:
+        """
+        Emite la señal para volver a la vista anterior.
+        """
+
+        self.volver_vista_anterior_signal.emit()
+
+    def emitir_evento_editar_orden(self, orden_compra:OrdenCompra) -> None:
+        """
+        Emite la señal para ir a la vista de editar.
+        """
+
+        self.abrir_vista_editar_orden_signal.emit(orden_compra)

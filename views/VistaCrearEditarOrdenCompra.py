@@ -1,7 +1,10 @@
+from pathlib import Path
+
 from PySide6 import QtCore
 from PySide6.QtCore import QDateTime, QDate
 from PySide6.QtWidgets import *
 from PySide6.QtGui import Qt
+from PySide6.QtCore import Signal
 
 from models.Insumo import Insumo
 from models.OrdenCompra import OrdenCompra
@@ -10,12 +13,16 @@ from views.widgets.EspacioHorizontalWidget import EspacioHorizontalWidget
 from views.widgets.BotonSecundarioWidget import BotonSecundarioWidget
 from views.widgets.TablaResponsivaRegular import TablaResponsivaRegular
 
-class VistaCrearEditarOrdenCompra(QVBoxLayout):
+class VistaCrearEditarOrdenCompra(QWidget):
     """
     Vista para crear y editar órdenes de compra.
 
     :param orden_compra: (None/OrdenCompra): Orden de compra a editar.
 
+    :var obtener_insumos_signal: (Signal): Señal para pedir al controlador todos los insumos.
+    :var llenar_forma_signal: (Signal(OrdenCompra)): Señal para llenar la tabla de insumos si se va a editar.
+    :var volver_vista_anterior_signal: (Signal): Señal para ir a la vista anterior.
+    :var guardar_orden_compra_signal: (Signal): Señal para guardar el formulario actual.
     :var titulo: (QLabel): Título principal de la vista.
     :var contenedor_botones: (QWidget): Contiene los botones guardar y volver.
     :var boton_guardar: (BotonPrincipalWidget): Botón para guardar la info actual en la forma en la orden actual o una nueva.
@@ -24,10 +31,18 @@ class VistaCrearEditarOrdenCompra(QVBoxLayout):
     :var tabla_lista_compras: (TablaResponsivaRegular): Muestra los insumos de la lista de compras de la orden.
     """
 
+    obtener_insumos_signal = Signal()
+    llenar_forma_signal = Signal(OrdenCompra)
+    volver_vista_anterior_signal = Signal()
+    guardar_orden_compra_signal = Signal()
+
     def __init__(self, orden_compra=None):
         super().__init__()
 
-        self.setSpacing(15)
+        self.layout = QVBoxLayout()
+        self.layout.setSpacing(15)
+
+        self.lista_opciones_insumos = []
 
         self.titulo = QLabel()
         self.titulo.setObjectName("titulo_principal_editar_crear")
@@ -37,8 +52,10 @@ class VistaCrearEditarOrdenCompra(QVBoxLayout):
         self.contenedor_botones.setLayout(QHBoxLayout())
         self.boton_volver = BotonPrincipalWidget("Volver")
         self.boton_volver.setFixedWidth(self.boton_volver.sizeHint().width() * 2)
+        self.boton_volver.clicked.connect(self.emitir_evento_volver)
         self.boton_guardar = BotonPrincipalWidget("Guardar")
         self.boton_guardar.setFixedWidth(self.boton_guardar.sizeHint().width() * 2)
+        self.boton_guardar.clicked.connect(self.emitir_evento_guardar)
         self.contenedor_botones.layout().addWidget(self.boton_volver)
         self.contenedor_botones.layout().addSpacerItem(EspacioHorizontalWidget())
         self.contenedor_botones.layout().addWidget(self.boton_guardar)
@@ -54,10 +71,14 @@ class VistaCrearEditarOrdenCompra(QVBoxLayout):
         else:
             self.titulo.setText("Crear orden de compra")
 
-        self.addWidget(self.contenedor_botones)
-        self.addWidget(self.titulo)
-        self.addWidget(self.boton_agregar_insumo)
-        self.addWidget(self.tabla_lista_compras)
+        self.layout.addWidget(self.contenedor_botones)
+        self.layout.addWidget(self.titulo)
+        self.layout.addWidget(self.boton_agregar_insumo)
+        self.layout.addWidget(self.tabla_lista_compras)
+
+        self.setLayout(self.layout)
+
+        self.setStyleSheet((Path('views/styles/estilos_ordenes_compra.qss').read_text()))
 
     def configurar_tabla_compras(self) -> None:
         """
@@ -77,15 +98,8 @@ class VistaCrearEditarOrdenCompra(QVBoxLayout):
         :return:
         """
 
-        lista_insumos_test = [
-            Insumo(1, "Arroz", None, None, None, None, None, None),
-            Insumo(2, "Papas", None, None, None, None, None, None),
-            Insumo(3, "Pescado", None, None, None, None, None, None),
-            Insumo(4, "Tomate", None, None, None, None, None, None)
-        ]
-
         lista_unidades = ["kilos", "gramos"]
-        lista_nombres = [insumo.nombre for insumo in lista_insumos_test]
+        lista_nombres = [insumo.nombre for insumo in self.lista_opciones_insumos]
 
         self.tabla_lista_compras.setRowCount(self.tabla_lista_compras.rowCount() + 1)
         fila_idx = self.tabla_lista_compras.rowCount() - 1
@@ -199,3 +213,27 @@ class VistaCrearEditarOrdenCompra(QVBoxLayout):
         selector_importe.setPrefix("$")
 
         self.tabla_lista_compras.setCellWidget(fila_idx, 5, selector_importe)
+
+    def asignar_insumos_combobox(self, lista:list[Insumo]) -> None:
+        """
+        Asigna la lista de insumos que pasa el controlador al atributo lista_opciones_insumos. Esto se usará para
+        asignar como opciones a los combobox.
+
+        :param lista: (list[Insumo]): Lista de todos los insumos en la BD.
+        """
+
+        self.lista_opciones_insumos = lista
+
+    def emitir_evento_volver(self) -> None:
+        """
+        Emite la señal para volver a la vista anterior.
+        """
+
+        self.volver_vista_anterior_signal.emit()
+
+    def emitir_evento_guardar(self) -> None:
+        """
+        Emite la señal para guardar los datos en el formulario actual.
+        """
+
+        self.guardar_orden_compra_signal.emit()

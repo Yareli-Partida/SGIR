@@ -1,19 +1,26 @@
-from PySide6.QtWidgets import *
+from pathlib import Path
 
+from PySide6.QtWidgets import *
+from PySide6.QtCore import Signal
+
+from models.Menu import Menu
 from models.Platillo import Platillo
 from views.widgets.BotonPrincipalWidget import BotonPrincipalWidget
 from views.widgets.BotonSecundarioWidget import BotonSecundarioWidget
 from views.widgets.TablaResponsivaDesigual import TablaResponsivaDesigual
 from views.widgets.EspacioHorizontalWidget import EspacioHorizontalWidget
 
-class VistaCrearEditarMenu(QVBoxLayout):
+class VistaCrearEditarMenu(QWidget):
     """
     Vista para crear y editar un menú.
 
-        :param lista_platillos: (list[Platillo]): Es la lista de todos los platillos que existen en la BD.
         :param menu: (None/Menu): Es el menú que se quiere mostrar si es que se va a usar la vista para editar uno.
 
-        :var lista_opciones_platillos: (list[Platillo]): Hace referencia al param lista_platillos.
+        :var obtener_platillos_signal: (Signal): Señal para pedir al controlador todos los platillos.
+        :var llenar_forma_signal: (Signal(Menu)): Señal para llenar la tabla de platillos si se va a editar.
+        :var volver_vista_anterior_signal: (Signal(Menu)): Señal para ir a la vista anterior.
+        :var guardar_menu_signal: (Signal): Señal para guardar el formulario actual.
+        :var lista_opciones_platillos: (list[Platillo]): Los platillos que mostrarán los combobox.
         :var boton_volver: (QPushBotton): Botón para volver a la vista anterior.
         :var boton_guardar: (QPushBotton): Botón para guardar la info actual en la forma en el menú actual o uno nuevo.
         :var contenedor_botones: (QWidget): Contiene los botones volver y guardar.
@@ -22,15 +29,23 @@ class VistaCrearEditarMenu(QVBoxLayout):
         :var tabla_platillos: (TablaResponsivaDesigual): Tabla donde se muestran los detalles de cada platillo.
     """
 
-    def __init__(self, lista_platillos:list[Platillo], menu=None):
+    obtener_platillos_signal = Signal()
+    llenar_forma_signal = Signal(Menu)
+    volver_vista_anterior_signal = Signal()
+    guardar_menu_signal = Signal()
+
+    def __init__(self, menu=None):
         super().__init__()
 
-        self.lista_opciones_platillos = lista_platillos
+        self.layout = QVBoxLayout()
+        self.lista_opciones_platillos = []
 
         self.boton_volver = BotonPrincipalWidget("Volver")
         self.boton_volver.setFixedWidth(self.boton_volver.sizeHint().width() * 2)
+        self.boton_volver.clicked.connect(self.emitir_evento_volver)
         self.boton_guardar = BotonPrincipalWidget("Guardar")
         self.boton_guardar.setFixedWidth(self.boton_guardar.sizeHint().width() * 2)
+        self.boton_guardar.clicked.connect(self.emitir_evento_guardar)
 
         self.contenedor_botones = QWidget()
         self.contenedor_botones.setLayout(QHBoxLayout())
@@ -43,6 +58,7 @@ class VistaCrearEditarMenu(QVBoxLayout):
         self.titulo.setProperty("cssClass", "titulo")
 
         self.boton_agregar_platillo = BotonSecundarioWidget("Agregar platillo")
+        self.boton_agregar_platillo.clicked.connect(self.agregar_fila_tabla_platillo)
 
         self.tabla_platillos = TablaResponsivaDesigual()
         encabezados = ["Categoría", "Platillo", "Precio"]
@@ -56,10 +72,14 @@ class VistaCrearEditarMenu(QVBoxLayout):
         else:
             self.titulo.setText("Crear Menú")
 
-        self.addWidget(self.contenedor_botones)
-        self.addWidget(self.titulo)
-        self.addWidget(self.boton_agregar_platillo)
-        self.addWidget(self.tabla_platillos)
+        self.layout.addWidget(self.contenedor_botones)
+        self.layout.addWidget(self.titulo)
+        self.layout.addWidget(self.boton_agregar_platillo)
+        self.layout.addWidget(self.tabla_platillos)
+
+        self.setLayout(self.layout)
+
+        self.setStyleSheet((Path('views/styles/estilos_menus.qss').read_text()))
 
     def agregar_fila_tabla_platillo(self, nombre_platillo=None, precio_platillo=None, categoria=None) -> None:
         """
@@ -105,9 +125,33 @@ class VistaCrearEditarMenu(QVBoxLayout):
 
     def cambiar_texto_etiqueta_categoria(self, etiqueta:QTableWidgetItem) -> None:
         """
-        Probablemente borraré esto al final
+        Borraré esto al final
         :param etiqueta: (QTableWidgetItem)
         :return:
         """
 
         etiqueta.setText("Platillo Fuerte")
+
+    def asignar_platillos_combobox(self, lista:list[Platillo]) -> None:
+        """
+        Asigna la lista de platillos que pasa el controlador al atributo lista_opciones_platillos. Esto se usará para
+        asignar como opciones a los combobox.
+
+        :param lista: (list[Platillo]): Lista de todos los platillos en la BD.
+        """
+
+        self.lista_opciones_platillos = lista
+
+    def emitir_evento_volver(self) -> None:
+        """
+        Emite la señal para volver a la vista anterior.
+        """
+
+        self.volver_vista_anterior_signal.emit()
+
+    def emitir_evento_guardar(self) -> None:
+        """
+        Emite la señal para guardar los datos en el formulario actual.
+        """
+
+        self.guardar_menu_signal.emit()

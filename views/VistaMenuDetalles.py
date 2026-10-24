@@ -1,6 +1,9 @@
+from pathlib import Path
+
 from PySide6 import QtCore
 from PySide6.QtWidgets import *
 from PySide6.QtGui import Qt
+from PySide6.QtCore import Signal
 
 from models.Menu import Menu
 from models.Platillo import Platillo
@@ -8,12 +11,15 @@ from views.widgets.BotonPrincipalWidget import BotonPrincipalWidget
 from views.widgets.TablaResponsivaDesigual import TablaResponsivaDesigual
 from views.widgets.EspacioHorizontalWidget import EspacioHorizontalWidget
 
-class VistaMenuDetalles(QVBoxLayout):
+class VistaMenuDetalles(QWidget):
     """
     Vista para ver detalles de un menú.
 
     :param menu: (Menu): Menú a mostrar.
 
+    :var mostrar_detalles_signal: (Signal(Menu)): Señal para ir a la vista de detalles.
+    :var volver_vista_anterior_signal: (Signal): Señal para ir a la vista anterior.
+    :var abrir_editar_menu_signal: (Signal(Menu)): Señal para ir a la vista de editar.
     :var boton_volver: (BotonPrincipalWidget): Botón para volver a la vista anterior.
     :var boton_editar_menu: (BotonPrincipalWidget): Botón para ir a la vista de editar con el menú actual.
     :var contenedor_botones: (QWidget): Contiene los botones volver y editar.
@@ -21,14 +27,22 @@ class VistaMenuDetalles(QVBoxLayout):
     :var tabla_detalles_platillos: (QTableWidget): Tabla que muestra los platillos del menú.
 
     """
+
+    mostrar_detalles_signal = Signal(Menu)
+    volver_vista_anterior_signal = Signal()
+    abrir_editar_menu_signal = Signal(Menu)
+
     def __init__(self, menu:Menu):
         super().__init__()
 
+        self.layout = QVBoxLayout()
+
         self.boton_volver = BotonPrincipalWidget("Volver")
         self.boton_volver.setFixedWidth(self.boton_volver.sizeHint().width() * 2)
-
+        self.boton_volver.clicked.connect(self.emitir_evento_volver)
         self.boton_editar_menu = BotonPrincipalWidget("Editar")
         self.boton_editar_menu.setFixedWidth(self.boton_editar_menu.sizeHint().width() * 2)
+        self.boton_editar_menu.clicked.connect(lambda: self.emitir_evento_editar_menu(menu))
 
         self.contenedor_botones = QWidget()
         self.contenedor_botones.setLayout(QHBoxLayout())
@@ -47,9 +61,13 @@ class VistaMenuDetalles(QVBoxLayout):
         encabezados = ["Categoría", "Platillo", "Precio"]
         self.tabla_detalles_platillos.setHorizontalHeaderLabels(encabezados)
 
-        self.addWidget(self.contenedor_botones)
-        self.addWidget(self.titulo_principal)
-        self.addWidget(self.tabla_detalles_platillos)
+        self.layout.addWidget(self.contenedor_botones)
+        self.layout.addWidget(self.titulo_principal)
+        self.layout.addWidget(self.tabla_detalles_platillos)
+
+        self.setLayout(self.layout)
+
+        self.setStyleSheet((Path('views/styles/estilos_menus.qss').read_text()))
 
     def agregar_platillos_tabla(self, lista_platillos:list[Platillo]) -> None:
         """
@@ -79,3 +97,17 @@ class VistaMenuDetalles(QVBoxLayout):
             self.tabla_detalles_platillos.setItem(contador_fila, 2, platillo_precio)
 
             contador_fila += 1
+
+    def emitir_evento_volver(self) -> None:
+        """
+        Emite la señal para volver a la vista anterior.
+        """
+
+        self.volver_vista_anterior_signal.emit()
+
+    def emitir_evento_editar_menu(self, menu:Menu) -> None:
+        """
+        Emite la señal para ir a la vista de editar.
+        """
+
+        self.abrir_editar_menu_signal.emit(menu)

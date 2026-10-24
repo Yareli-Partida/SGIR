@@ -1,16 +1,24 @@
+from pathlib import Path
+
 from PySide6.QtWidgets import *
 from PySide6.QtCore import Qt
+from PySide6.QtCore import Signal
 
+from models.Receta import Receta
 from views.widgets.BotonPrincipalWidget import BotonPrincipalWidget
 from views.widgets.BotonSecundarioWidget import BotonSecundarioWidget
 from views.widgets.EspacioHorizontalWidget import EspacioHorizontalWidget
+from views.widgets.TablaResponsivaRegular import TablaResponsivaRegular
 
-class VistaCrearEditarReceta(QVBoxLayout):
+class VistaCrearEditarReceta(QWidget):
     """
     Vista para crear y editar recetas.
 
         :param receta_editar: (None/Receta): Es la receta que se quiere mostrar si es que se va a usar la vista para editar una.
 
+        :var llenar_forma_signal: (Signal(OrdenCompra)): Señal para llenar la tabla de ingredientes si se va a editar.
+        :var volver_vista_anterior_signal: (Signal): Señal para ir a la vista anterior.
+        :var guardar_receta_signal: (Signal): Señal para guardar el formulario actual.
         :var titulo: (QLabel): Título principal de la vista.
         :var botones_contenedor: (QWidget): Contiene los botones guardar y volver.
         :var boton_guardar_receta: (BotonPrincipalWidget): Botón para guardar la info actual en la forma en la receta actual o una nueva.
@@ -24,16 +32,22 @@ class VistaCrearEditarReceta(QVBoxLayout):
         :var tabla_ingredientes_titulo_contenedor: (QWidget): Contiene la etiqueta de tabla ingredientes y su botón para agregar fila.
         :var etiqueta_tabla_ingredientes: (QLabel): Título de la tabla ingredientes.
         :var boton_agregar_ingrediente: (QPushButton): Botón para agregar una fila en blanco a la tabla ingredientes.
-        :var tabla_ingredientes: (QTableWidget): Tabla donde se muestran los detalles de los ingredientes.
+        :var tabla_ingredientes: (TablaResponsivaRegular): Tabla donde se muestran los detalles de los ingredientes.
         :var tabla_instrucciones_titulo_contenedor: (QWidget): Contiene la etiqueta de la tabla instrucciones y su botón para agregar fila.
         :var etiqueta_tabla_instrucciones: (QLabel): Título de la tabla instrucciones.
         :var boton_agregar_instruccion: (BotonSecundarioWidget): Botón para agregar una fila en blanco a la tabla instrucciones.
-        :var tabla_instrucciones: (QTableWidget): Tabla donde se muestran las instrucciones.
+        :var tabla_instrucciones: (TablaResponsivaRegular): Tabla donde se muestran las instrucciones.
 
     """
 
+    llenar_forma_signal = Signal(Receta)
+    volver_vista_anterior_signal = Signal()
+    guardar_receta_signal = Signal()
+
     def __init__(self, receta_editar=None):
         super().__init__()
+
+        self.layout = QVBoxLayout()
 
         self.titulo = QLabel()
         self.titulo.setObjectName("titulo")
@@ -43,8 +57,10 @@ class VistaCrearEditarReceta(QVBoxLayout):
         self.botones_contenedor.setLayout(QHBoxLayout())
         self.boton_guardar_receta = BotonPrincipalWidget("Guardar")
         self.boton_guardar_receta.setFixedWidth(self.boton_guardar_receta.sizeHint().width() * 2)
+        self.boton_guardar_receta.clicked.connect(self.emitir_evento_guardar_receta)
         self.boton_volver = BotonPrincipalWidget("Volver")
         self.boton_volver.setFixedWidth(self.boton_volver.sizeHint().width() * 2)
+        self.boton_volver.clicked.connect(self.emitir_evento_abrir_volver)
         self.botones_contenedor.layout().addWidget(self.boton_volver)
         self.botones_contenedor.layout().addSpacerItem(EspacioHorizontalWidget())
         self.botones_contenedor.layout().addWidget(self.boton_guardar_receta)
@@ -57,7 +73,6 @@ class VistaCrearEditarReceta(QVBoxLayout):
         self.etiqueta_nombre_receta.setFixedWidth(self.etiqueta_nombre_receta.sizeHint().width())
         self.campo_nombre_receta = QLineEdit()
         self.campo_nombre_receta.setObjectName("campo_nombre_receta")
-        self.campo_nombre_receta.setFixedWidth(self.calcular_ancho_por_caracteres(30))
         self.nombre_receta_contenedor.layout().addWidget(self.etiqueta_nombre_receta)
         self.nombre_receta_contenedor.layout().addWidget(self.campo_nombre_receta)
 
@@ -70,7 +85,6 @@ class VistaCrearEditarReceta(QVBoxLayout):
         self.etiqueta_num_porciones.setObjectName("etiqueta_num_porciones")
         self.selector_num_porciones = QSpinBox()
         self.selector_num_porciones.setObjectName("selector_num_porciones")
-        self.selector_num_porciones.setFixedWidth(self.calcular_ancho_por_caracteres(7))
         self.num_porciones_contenedor.layout().addWidget(self.etiqueta_num_porciones)
         self.num_porciones_contenedor.layout().addWidget(self.selector_num_porciones)
 
@@ -88,7 +102,7 @@ class VistaCrearEditarReceta(QVBoxLayout):
         self.tabla_ingredientes_titulo_contenedor.layout().addWidget(self.etiqueta_tabla_ingredientes)
         self.tabla_ingredientes_titulo_contenedor.layout().addWidget(self.boton_agregar_ingrediente)
 
-        self.tabla_ingredientes = QTableWidget()
+        self.tabla_ingredientes = TablaResponsivaRegular()
         self.tabla_ingredientes.setObjectName("tabla_ingredientes")
 
         self.tabla_instrucciones_titulo_contenedor = QWidget()
@@ -105,17 +119,17 @@ class VistaCrearEditarReceta(QVBoxLayout):
         self.tabla_instrucciones_titulo_contenedor.layout().addWidget(self.etiqueta_tabla_instrucciones)
         self.tabla_instrucciones_titulo_contenedor.layout().addWidget(self.boton_agregar_instruccion)
 
-        self.tabla_instrucciones = QTableWidget()
+        self.tabla_instrucciones = TablaResponsivaRegular()
         self.tabla_instrucciones.setObjectName("tabla_instrucciones")
 
-        self.addWidget(self.botones_contenedor)
-        self.addWidget(self.titulo)
-        self.addWidget(self.nombre_receta_contenedor)
-        self.addWidget(self.num_porciones_contenedor)
-        self.addWidget(self.tabla_ingredientes_titulo_contenedor)
-        self.addWidget(self.tabla_ingredientes)
-        self.addWidget(self.tabla_instrucciones_titulo_contenedor)
-        self.addWidget(self.tabla_instrucciones)
+        self.layout.addWidget(self.botones_contenedor)
+        self.layout.addWidget(self.titulo)
+        self.layout.addWidget(self.nombre_receta_contenedor)
+        self.layout.addWidget(self.num_porciones_contenedor)
+        self.layout.addWidget(self.tabla_ingredientes_titulo_contenedor)
+        self.layout.addWidget(self.tabla_ingredientes)
+        self.layout.addWidget(self.tabla_instrucciones_titulo_contenedor)
+        self.layout.addWidget(self.tabla_instrucciones)
 
         self.configurar_tabla_ingredientes()
         self.configurar_tabla_instrucciones()
@@ -124,6 +138,10 @@ class VistaCrearEditarReceta(QVBoxLayout):
             self.titulo.setText("Crear receta")
         else:
             self.titulo.setText("Editar receta")
+
+        self.setLayout(self.layout)
+
+        self.setStyleSheet((Path('views/styles/estilos_recetas.qss').read_text()))
 
     def configurar_tabla_ingredientes(self) -> None:
         """
@@ -190,14 +208,16 @@ class VistaCrearEditarReceta(QVBoxLayout):
 
         self.tabla_instrucciones.setCellWidget(contador_tabla_instrucciones, 0, campo_instruccion)
 
-    def calcular_ancho_por_caracteres(self, num_caracteres: int) -> int:
+    def emitir_evento_abrir_volver(self) -> None:
         """
-        Calcula el ancho que ocupa X número de caractéres en un elemento de PyQt
-        * Probablemente borre después*
+        Emite la señal para volver a la vista anterior.
+        """
 
-        :param num_caracteres: (int): El número que caracteres del que se quiere obtener el ancho.
-        :return: (int) El tamaño del ancho que ocupa el número de caractéres ingresado.
+        self.volver_vista_anterior_signal.emit()
+
+    def emitir_evento_guardar_receta(self) -> None:
         """
-        palabra = "a" * (num_caracteres + 1)
-        x = QLabel(palabra)
-        return x.sizeHint().width()
+        Emite la señal para guardar los datos en el formulario actual.
+        """
+
+        self.guardar_receta_signal.emit()
