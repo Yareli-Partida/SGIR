@@ -12,8 +12,12 @@ for insumo in insumos:
 '''
 
 import sys
+from pathlib import Path
+
 from PySide6.QtWidgets import QApplication, QMainWindow, QPushButton
 
+from controllers.ControladorPrincipal import ControladorPrincipal
+from views.VistaVentanaPrincipal import VistaVentanaPrincipal
 
 print('iniciando app...')
 
@@ -30,6 +34,8 @@ from controllers.inventario_controller import InventarioController
 
 def main():
     app = QApplication(sys.argv)
+
+    app.setStyleSheet((Path('views/styles/estilos_principal.qss').read_text()))
     
     #Capa de DAO
     db_connection = "Conexión MySQL"
@@ -39,14 +45,22 @@ def main():
     service = InventarioServicio(dao)
     
     #Capa Vista
-    view = InventarioView()
-    
-    #Capa Controladora
-    controller = InventarioController(view, service)
-    
-    # Mostrar la aplicación
-    view.resize(400, 200)
-    view.show()
+    # view = InventarioView()
+    #
+    # #Capa Controladora
+    # controller = InventarioController(view, service)
+    #
+    # # Mostrar la aplicación
+    # view.resize(400, 200)
+    # view.show()
+    # sys.exit(app.exec())
+
+
+    vista_principal = VistaVentanaPrincipal()
+    controlador_principal = ControladorPrincipal(vista_principal)
+
+    vista_principal.resize(800, 600)
+    vista_principal.show()
     sys.exit(app.exec())
 
 if __name__ == "__main__":
