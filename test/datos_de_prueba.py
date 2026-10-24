@@ -32,19 +32,19 @@ def receta_datos_prueba():
         Receta(5, "Café", "", 40),
     ]
 
-@pytest.fixture
-def ingrediente_datos_prueba():
-    return [
-        Ingrediente(1, "Azúcar"),
-        Ingrediente(2, "Harina"),
-        Ingrediente(3, "Pollo"),
-        Ingrediente(4, "Carne de res"),
-        Ingrediente(5, "Café"),
-        Ingrediente(6, "Tomate"),
-        Ingrediente(7, "Papas"),
-        Ingrediente(8, "Pasta"),
-        Ingrediente(9, "Leche")
-    ]
+# @pytest.fixture
+# def ingrediente_datos_prueba():
+#     return [
+#         Ingrediente(1, "Azúcar"),
+#         Ingrediente(2, "Harina"),
+#         Ingrediente(3, "Pollo"),
+#         Ingrediente(4, "Carne de res"),
+#         Ingrediente(5, "Café"),
+#         Ingrediente(6, "Tomate"),
+#         Ingrediente(7, "Papas"),
+#         Ingrediente(8, "Pasta"),
+#         Ingrediente(9, "Leche")
+#     ]
 
 @pytest.fixture
 def merma_datos_prueba():
