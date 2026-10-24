@@ -130,7 +130,7 @@ class ControladorPrincipal(QObject):
 
     def mostrar_vista_ordenes_compra(self):
         vista_ordenes_compra = VistaListaOrdenesCompra()
-        # vista_ordenes_compra.abrir_crear_orden_signal.connect()
+        vista_ordenes_compra.abrir_crear_orden_signal.connect(self.mostrar_vista_crear_orden_compra)
         vista_ordenes_compra.abrir_detalles_orden_signal.connect(self.mostrar_vista_detalles_orden_compra)
 
         ControladorListaOrdenesCompra(vista_ordenes_compra)
