@@ -33,19 +33,27 @@ class ControladorListaMenus(QObject):
             Menu(2, "Menú de fin de semana", 7)
         ]
 
-        lista_platillos = [
-            Platillo(1, "Pasta en salsa de tomate", 150),
-            Platillo(2, "Puré de papas", 70),
-            Platillo(3, "Filete de res", 250),
-            Platillo(4, "Caldo de pollo", 180),
-            Platillo(5, "Café", 50),
+        # lista_platillos = [
+        #     Platillo(1, "Pasta en salsa de tomate", 150),
+        #     Platillo(2, "Puré de papas", 70),
+        #     Platillo(3, "Filete de res", 250),
+        #     Platillo(4, "Caldo de pollo", 180),
+        #     Platillo(5, "Café", 50),
+        # ]
+
+        lista_platillos_test = [
+            {"num": 1, "nombre": "Pasta en salsa de tomate", "precio":150},
+            {"num": 2, "nombre": "Puré de papas", "precio": 70},
+            {"num": 3, "nombre": "Filete de res", "precio": 250},
+            {"num": 4, "nombre": "Caldo de pollo", "precio": 180},
+            {"num": 5, "nombre": "Café", "precio": 50}
         ]
 
         fila = 1
         col = 0
 
         for menu in lista_menu:
-            tarjeta = self.vista.crear_tarjeta_menu(menu, lista_platillos)
+            tarjeta = self.vista.crear_tarjeta_menu(menu, lista_platillos_test)
             tarjeta.setFixedWidth(self.vista.width() // 3)
             self.vista.layout.addWidget(tarjeta, fila, col)
             col += 1

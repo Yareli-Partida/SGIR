@@ -69,7 +69,7 @@ class VistaMenuDetalles(QWidget):
 
         self.setStyleSheet((Path('views/styles/estilos_menus.qss').read_text()))
 
-    def agregar_platillos_tabla(self, lista_platillos:list[Platillo]) -> None:
+    def agregar_platillos_tabla(self, lista_platillos:list) -> None:
         """
         Llena la tabla detalles platillos.
 
@@ -81,10 +81,12 @@ class VistaMenuDetalles(QWidget):
         contador_fila = 0
 
         for platillo in lista_platillos:
-            platillo_nombre = QTableWidgetItem(platillo.nombre)
+            # platillo_nombre = QTableWidgetItem(platillo.nombre)
+            platillo_nombre = QTableWidgetItem(platillo["nombre"])
             platillo_nombre.setFlags(QtCore.Qt.ItemFlag.ItemIsEditable)
 
-            platillo_precio = QTableWidgetItem(f"${platillo.precio}")
+            # platillo_precio = QTableWidgetItem(f"${platillo.precio}")
+            platillo_precio = QTableWidgetItem(f"${platillo["precio"]}")
             platillo_precio.setTextAlignment(Qt.AlignmentFlag.AlignVCenter)
             platillo_precio.setFlags(QtCore.Qt.ItemFlag.ItemIsEditable)
 

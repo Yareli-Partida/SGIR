@@ -32,14 +32,22 @@ class ControladorCrearEditarMenu(QObject):
         """
 
         # testeo
-        lista_platillos = [Platillo(1, "Pasta en salsa de tomate", 150),
-            Platillo(2, "Puré de papas", 70),
-            Platillo(3, "Filete de res", 250),
-            Platillo(4, "Caldo de pollo", 180),
-            Platillo(5, "Café", 50),
+        # lista_platillos = [Platillo(1, "Pasta en salsa de tomate", 150),
+        #     Platillo(2, "Puré de papas", 70),
+        #     Platillo(3, "Filete de res", 250),
+        #     Platillo(4, "Caldo de pollo", 180),
+        #     Platillo(5, "Café", 50),
+        # ]
+
+        lista_platillos_test = [
+            {"num": 1, "nombre": "Pasta en salsa de tomate", "precio": 150},
+            {"num": 2, "nombre": "Puré de papas", "precio": 70},
+            {"num": 3, "nombre": "Filete de res", "precio": 250},
+            {"num": 4, "nombre": "Caldo de pollo", "precio": 180},
+            {"num": 5, "nombre": "Café", "precio": 50}
         ]
 
-        self.vista.asignar_platillos_combobox(lista_platillos)
+        self.vista.asignar_platillos_combobox(lista_platillos_test)
 
     @Slot(Menu)
     def llenar_forma_menu(self, menu:Menu) -> None:
@@ -50,14 +58,26 @@ class ControladorCrearEditarMenu(QObject):
         :param menu: (Menu): El menú del que se llenará la forma.
         """
 
-        menu_platillos = [
-            Platillo(1, "Pasta en salsa de tomate", 150),
-            Platillo(2, "Puré de papas", 70),
-            Platillo(3, "Filete de res", 250),
-            Platillo(4, "Caldo de pollo", 180),
-            Platillo(5, "Café", 50),
+        # menu_platillos = [
+        #     Platillo(1, "Pasta en salsa de tomate", 150),
+        #     Platillo(2, "Puré de papas", 70),
+        #     Platillo(3, "Filete de res", 250),
+        #     Platillo(4, "Caldo de pollo", 180),
+        #     Platillo(5, "Café", 50),
+        # ]
+
+        lista_platillos_test = [
+            {"num": 1, "nombre": "Pasta en salsa de tomate", "precio": 150},
+            {"num": 2, "nombre": "Puré de papas", "precio": 70},
+            {"num": 3, "nombre": "Filete de res", "precio": 250},
+            {"num": 4, "nombre": "Caldo de pollo", "precio": 180},
+            {"num": 5, "nombre": "Café", "precio": 50}
         ]
 
-        for platillo in menu_platillos:
+        # for platillo in lista_platillos_test:
+        #     categoria = "Platillo Fuerte"
+        #     self.vista.agregar_fila_tabla_platillo(platillo.nombre, int(platillo.precio), categoria)
+
+        for platillo in lista_platillos_test:
             categoria = "Platillo Fuerte"
-            self.vista.agregar_fila_tabla_platillo(platillo.nombre, int(platillo.precio), categoria)
+            self.vista.agregar_fila_tabla_platillo(platillo["nombre"], int(platillo["precio"]), categoria)

@@ -48,7 +48,7 @@ class VistaListaMenus(QWidget):
 
         self.setStyleSheet((Path('views/styles/estilos_menus.qss').read_text()))
 
-    def crear_tarjeta_menu(self, menu:Menu, platillos:list[Platillo]) -> QWidget:
+    def crear_tarjeta_menu(self, menu:Menu, platillos:list) -> QWidget:
         """
         Crea un widget "tarjeta" para mostrar una vista previa al menú.
 
@@ -90,9 +90,11 @@ class VistaListaMenus(QWidget):
             contenedor.setObjectName("elemento_platillos")
             contenedor_layout = QHBoxLayout()
             contenedor_layout.setAlignment(Qt.AlignmentFlag.AlignLeft)
-            etiqueta_platillo = QLabel(platillo.nombre)
+            # etiqueta_platillo = QLabel(platillo.nombre)
+            etiqueta_platillo = QLabel(platillo["nombre"])
             etiqueta_platillo.setWordWrap(True)
-            etiqueta_precio = QLabel(f"${platillo.precio}")
+            # etiqueta_precio = QLabel(f"${platillo.precio}")
+            etiqueta_precio = QLabel(f"${platillo["precio"]}")
             etiqueta_precio.setFixedWidth(etiqueta_precio.sizeHint().width())
 
             contenedor_layout.addWidget(etiqueta_platillo)

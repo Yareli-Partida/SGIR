@@ -94,7 +94,8 @@ class VistaCrearEditarMenu(QWidget):
         self.tabla_platillos.setRowCount(self.tabla_platillos.rowCount() + 1)
         num_fila = self.tabla_platillos.rowCount() - 1
         selector_platillo_nombre = QComboBox()
-        lista_nombres_platillos = [platillo.nombre for platillo in self.lista_opciones_platillos]
+        # lista_nombres_platillos = [platillo.nombre for platillo in self.lista_opciones_platillos]
+        lista_nombres_platillos = [platillo["nombre"] for platillo in self.lista_opciones_platillos]
         selector_platillo_nombre.insertItems(len(self.lista_opciones_platillos), lista_nombres_platillos)
 
         if nombre_platillo:
