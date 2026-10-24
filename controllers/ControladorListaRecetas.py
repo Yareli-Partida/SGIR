@@ -25,7 +25,7 @@ class ControladorListaRecetas(QObject):
         Conecta con la capa de servicios para obtener la lista de recetas y crea un elemento de lista para cada una.
         """
         # esto es solo para testeo manual
-        lista_recetas = [Receta(1, "Pasta en salsa de tomate", "", 10)]
+        lista_recetas = [Receta(1, "Pasta en salsa de tomate", 10, )]
 
         for receta in lista_recetas:
             self.vista.crear_elemento_lista(receta)
