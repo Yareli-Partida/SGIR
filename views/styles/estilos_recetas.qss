@@ -1,0 +1,13 @@
+QListWidget#lista_recetas {
+    margin: 2em, none, none, none;
+    border: none;
+}
+
+QListWidget::item, QLabel#etiqueta {
+    background-color: transparent;
+}
+
+QWidget#elemento_lista {
+    border: 1px solid #E0E0E0;
+    border-radius: 12.5px;
+}

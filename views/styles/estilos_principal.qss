@@ -1,0 +1,99 @@
+* {
+    font-family: "Arial";
+    background-color: #FFFFFF;
+    color: #1E1E1E;
+}
+
+QToolBar > * {
+    margin: 0.5em;
+    text-align: left;
+}
+
+QToolBar > QLabel {
+    font-weight: bold;
+    border: none;
+}
+
+QLabel#project_title {
+    margin: 1em 1em 1em 0.5em;
+}
+
+QToolBar > QToolButton {
+    width: 10em;
+    text-align: left;
+
+}
+
+QToolBar > QToolButton:hover {
+    border: none;
+}
+
+QScrollBar {
+    background : #DADADD;
+}
+
+QScrollBar::handle {
+    background : #AAAAB1;
+    border-radius: 4px;
+}
+
+QScrollBar::handle::pressed {
+    background : #92929B;
+}
+
+QScrollBar::right-arrow:horizontal, QScrollBar::left-arrow:horizontal {
+    border: none;
+    background: none;
+    color: none;
+}
+
+QPushButton[cssClass="boton_principal"] {
+    border: 1px solid #CAC4D0;
+    height: 3em;
+    border-radius: 20px;
+    font-weight: bold;
+}
+
+QPushButton[cssClass="boton_principal"]:hover {
+    background-color: #CAC4D0;
+}
+
+QPushButton[cssClass="boton_secundario"] {
+    border: 1px solid #E8DEF8;
+    background-color: #E8DEF8;
+    height: 1.5em;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+QPushButton[cssClass="boton_secundario"]:hover {
+    background-color: #CEB9F0;
+}
+
+QLabel[cssClass="titulo"] {
+    font-weight: bold;
+    font-size: 20pt;
+}
+
+QTableWidget::item {
+    margin-top: 0.25em;
+    background-color: #FFFFFF;
+}
+
+QTableWidget::item:focus {
+    background-color: #BCDCF4;
+    color: #1E1E1E;
+}
+
+QTableWidget {
+    border: 1px solid #E0E0E0;
+    border-radius: 5px;
+    selection-background-color: #FFFFFF;
+}
+QTableWidget::item:top {
+background-color: orange
+}
+
+QComboBox, QLineEdit, QDateEdit, QSpinBox, QDoubleSpinBox {
+    selection-background-color: #BCDCF4;
+}

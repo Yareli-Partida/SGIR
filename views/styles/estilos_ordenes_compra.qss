@@ -1,0 +1,24 @@
+QLabel#titulo_principal_detalles, QLabel#titulo_principal_editar_crear {
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+
+QLabel[cssClass="en_progreso"] {
+    background-color: orange;
+}
+
+QLabel[cssClass="terminada"] {
+    background-color: lightgreen;
+}
+
+QLabel[cssClass="cancelada"] {
+    background-color: red;
+}
+
+QLabel#etiqueta_edo_orden {
+    border-radius: 4px;
+}
+
+QTableWidget#tabla_lista_compras {
+    margin-top: 1em;
+}
