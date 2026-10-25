@@ -43,7 +43,7 @@ class VistaListaMenus(QWidget):
         self.boton_crear_menu.clicked.connect(self.emitir_evento_abrir_crear_menu)
 
         self.layout.addWidget(self.titulo_principal, 0, 0)
-        self.layout.addWidget(self.boton_crear_menu, 0, 3, alignment=Qt.AlignmentFlag.AlignRight)
+        self.layout.addWidget(self.boton_crear_menu, 0, 2, alignment=Qt.AlignmentFlag.AlignRight)
         self.setLayout(self.layout)
 
         self.setStyleSheet((Path('views/styles/estilos_menus.qss').read_text()))
@@ -130,8 +130,10 @@ class VistaListaMenus(QWidget):
 
         :param event: (QResizeEvent)
         """
+        margenes = self.layout.contentsMargins().left() * 4
+        medida = (self.width() - margenes) // 3
 
         for tarjeta in self.lista_tarjetas_menu:
-            tarjeta.setFixedWidth(self.width() // 3)
+            tarjeta.setFixedWidth(medida)
 
         self.maximumSize().setHeight(self.sizeHint().height())
