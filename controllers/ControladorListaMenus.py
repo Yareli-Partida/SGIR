@@ -30,7 +30,15 @@ class ControladorListaMenus(QObject):
         # para testeo manual
         lista_menu = [
             Menu(1, "Menú de entre semana", 5),
-            Menu(2, "Menú de fin de semana", 7)
+            Menu(2, "Menú de fin de semana", 7),
+            Menu(3, "Menú de navidad", 7),
+            Menu(4, "Menú 2026", 7),
+            Menu(5, "Menú 2025", 7),
+            Menu(6, "Menú 2024", 7),
+            Menu(7, "Menú 2023", 7),
+            Menu(5, "Menú 2025", 7),
+            Menu(6, "Menú 2024", 7),
+            Menu(7, "Menú 2023", 7)
         ]
 
         # lista_platillos = [
@@ -58,6 +66,6 @@ class ControladorListaMenus(QObject):
             self.vista.layout.addWidget(tarjeta, fila, col)
             col += 1
 
-            if col > 3:
+            if col >= 3:
                 fila += 1
                 col = 0
