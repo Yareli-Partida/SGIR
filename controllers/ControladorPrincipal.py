@@ -1,5 +1,7 @@
-from PySide6.QtCore import QObject, Slot
+from PySide6.QtCore import QObject, Slot, Qt
+from PySide6.QtWidgets import QScrollArea
 
+from controllers.ControladorListaPlatillos import ControladorListaPlatillos
 from controllers.ControladorCrearEditarMenu import ControladorCrearEditarMenu
 from controllers.ControladorCrearEditarOrdenCompra import ControladorCrearEditarOrdenCompra
 from controllers.ControladorCrearEditarReceta import ControladorCrearEditarReceta
@@ -7,13 +9,19 @@ from controllers.ControladorDetallesMenu import ControladorDetallesMenu
 from controllers.ControladorDetallesOrdenCompra import ControladorDetallesOrdenCompra
 from controllers.ControladorListaMenus import ControladorListaMenus
 from controllers.ControladorListaOrdenesCompra import ControladorListaOrdenesCompra
+from controllers.ControladorCrearEditarPlatillo import ControladorCrearEditarPlatillo
+from controllers.ControladorPlatilloDetalles import ControladorPlatilloDetalles
 from models.Menu import Menu
 from models.OrdenCompra import OrdenCompra
+from models.Platillo import Platillo
 from models.Receta import Receta
+from views.VistaCrearEditarPlatillo import VistaCrearEditarPlatillo
 from views.VistaHome import VistaHome
+from views.VistaListaPlatillos import VistaListaPlatillos
 
 from views.VistaListaRecetas import VistaListaRecetas
 from views.VistaCrearEditarReceta import VistaCrearEditarReceta
+from views.VistaPlatilloDetalles import VistaPlatilloDetalles
 from views.VistaRecetaDetalles import VistaRecetaDetalles
 
 from views.VistaListaMenus import VistaListaMenus
@@ -45,7 +53,8 @@ class ControladorPrincipal(QObject):
         self.vista.abrir_vista_home_signal.connect(self.mostrar_vista_home)
         self.vista.abrir_recetas_signal.connect(self.mostrar_vista_recetas)
         self.vista.abrir_menus_signal.connect(self.mostrar_vista_menus)
-        self.vista.abrir_ordenes_compra.connect(self.mostrar_vista_ordenes_compra)
+        self.vista.abrir_ordenes_compra_signal.connect(self.mostrar_vista_ordenes_compra)
+        self.vista.abrir_platillos_signal.connect(self.mostrar_vista_platillos)
 
     def mostrar_vista_home(self):
         self.vista.setCentralWidget(VistaHome())
@@ -87,14 +96,71 @@ class ControladorPrincipal(QObject):
         self.vista.setCentralWidget(vista_editar_receta)
         vista_editar_receta.llenar_forma_signal.emit(receta)
 
+    def mostrar_vista_platillos(self):
+        scroll = QScrollArea()
+
+        scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        scroll.setWidgetResizable(True)
+
+        vista_platillos = VistaListaPlatillos()
+        vista_platillos.abrir_crear_signal.connect(self.mostrar_vista_crear_platillo)
+        vista_platillos.abrir_detalles_signal.connect(self.mostrar_vista_platillo_detalles)
+
+        ControladorListaPlatillos(vista_platillos)
+
+        scroll.setWidget(vista_platillos)
+
+        self.vista.setCentralWidget(scroll)
+        vista_platillos.mostrar_platillos_signal.emit()
+
+    def mostrar_vista_crear_platillo(self):
+        vista_crear_platillo = VistaCrearEditarPlatillo()
+        vista_crear_platillo.volver_vista_anterior_signal.connect(self.mostrar_vista_platillos)
+
+        ControladorCrearEditarPlatillo(vista_crear_platillo)
+
+        self.vista.setCentralWidget(vista_crear_platillo)
+        vista_crear_platillo.obtener_lista_recetas_signal.emit()
+        vista_crear_platillo.obtener_lista_categorias_signal.emit()
+
+    @Slot(Platillo)
+    def mostrar_vista_platillo_detalles(self, platillo:Platillo):
+        vista_platillo_detalles = VistaPlatilloDetalles(platillo)
+        vista_platillo_detalles.volver_vista_anterior_signal.connect(self.mostrar_vista_platillos)
+        vista_platillo_detalles.abrir_vista_editar_signal.connect(lambda platillo_obj=platillo: self.mostrar_vista_editar_platillo(platillo_obj))
+
+        ControladorPlatilloDetalles(vista_platillo_detalles)
+
+        self.vista.setCentralWidget(vista_platillo_detalles)
+        vista_platillo_detalles.mostrar_detalles_signal.emit(platillo)
+
+    @Slot(Platillo)
+    def mostrar_vista_editar_platillo(self, platillo:Platillo):
+        vista_editar_platillo = VistaCrearEditarPlatillo(platillo)
+        vista_editar_platillo.volver_vista_anterior_signal.connect(lambda platillo_obj=platillo: self.mostrar_vista_platillo_detalles(platillo))
+
+        ControladorCrearEditarPlatillo(vista_editar_platillo)
+
+        self.vista.setCentralWidget(vista_editar_platillo)
+        vista_editar_platillo.obtener_lista_recetas_signal.emit()
+        vista_editar_platillo.obtener_lista_categorias_signal.emit()
+        vista_editar_platillo.llenar_forma_signal.emit(platillo)
+
     def mostrar_vista_menus(self):
+        scroll = QScrollArea()
+
+        scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        scroll.setWidgetResizable(True)
+
         vista_menus = VistaListaMenus()
         vista_menus.abrir_crear_menu_signal.connect(self.mostrar_vista_crear_menu)
         vista_menus.abrir_detalles_signal.connect(self.mostrar_vista_detalles_menu)
 
         ControladorListaMenus(vista_menus)
 
-        self.vista.setCentralWidget(vista_menus)
+        scroll.setWidget(vista_menus)
+
+        self.vista.setCentralWidget(scroll)
         vista_menus.mostrar_menus_signal.emit()
 
     def mostrar_vista_crear_menu(self):
