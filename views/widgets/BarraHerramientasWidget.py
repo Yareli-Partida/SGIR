@@ -28,7 +28,9 @@ class BarraHerramientasWidget(QtWidgets.QToolBar):
         self.boton_recetas = self.crear_boton_recetas()
         self.addAction(self.boton_recetas)
 
-        # self.addAction(self.crear_boton_platillos())
+        self.boton_platillos = self.crear_boton_platillos()
+        self.addAction(self.boton_platillos)
+
         self.boton_menus = self.crear_boton_menus()
         self.addAction(self.boton_menus)
 
@@ -52,6 +54,11 @@ class BarraHerramientasWidget(QtWidgets.QToolBar):
         recetas_action_button = QtGui.QAction(QtGui.QIcon("views/resources/icons/icono_receta.svg"), "&Recetas", self)
         recetas_action_button.setStatusTip("Crea, modifica y consulta recetas")
         return recetas_action_button
+
+    def crear_boton_platillos(self):
+        platillos_action_button = QtGui.QAction(QtGui.QIcon("views/resources/icons/icono_platillo.svg"), "&Platillos", self)
+        platillos_action_button.setStatusTip("Crea, modifica y consulta platillos")
+        return platillos_action_button
 
     def crear_boton_menus(self):
         menus_action_button = QtGui.QAction(QtGui.QIcon("views/resources/icons/icono_menu.svg"), "&Menús", self)
