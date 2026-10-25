@@ -77,7 +77,6 @@ QLabel[cssClass="titulo"] {
 
 QTableWidget::item {
     margin-top: 0.25em;
-    background-color: #FFFFFF;
 }
 
 QTableWidget::item:focus {
@@ -90,10 +89,43 @@ QTableWidget {
     border-radius: 5px;
     selection-background-color: #FFFFFF;
 }
-QTableWidget::item:top {
-background-color: orange
-}
 
 QComboBox, QLineEdit, QDateEdit, QSpinBox, QDoubleSpinBox {
     selection-background-color: #BCDCF4;
+    border: 1px solid #CAC4D0;
+    border-radius: 4px;
+}
+
+QComboBox:selected, QLineEdit:focus, QSpinBox:selected, QDoubleSpinBox:selected {
+    border: 1px solid #BCDCF4;
+}
+
+QScrollArea {
+    border: none;
+}
+
+QComboBox::drop-down, QDateEdit::drop-down {
+    image: url("views/resources/icons/icono_drop_down.svg");
+    subcontrol-position: right;
+}
+
+QComboBox::drop-down:disabled, QDateEdit::drop-down:disabled {
+    image: url("views/resources/icons/icono_drop_down_disabled.svg");
+    subcontrol-position: right;
+}
+
+QSpinBox::down-button, QDoubleSpinBox::down-button {
+    image: url("views/resources/icons/icono_drop_down.svg");
+}
+
+QSpinBox::up-button, QDoubleSpinBox::up-button {
+    image: url("views/resources/icons/icono_flecha_arriba.svg");
+}
+
+QSpinBox::down-button:disabled, QDoubleSpinBox::down-button:disabled {
+    image: url("views/resources/icons/icono_drop_down_disabled.svg");
+}
+
+QSpinBox::up-button:disabled, QDoubleSpinBox::up-button:disabled {
+    image: url("views/resources/icons/icono_flecha_arriba_disabled.svg");
 }
