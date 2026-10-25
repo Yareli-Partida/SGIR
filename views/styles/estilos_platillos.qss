@@ -1,0 +1,32 @@
+QListWidget#lista_platillos {
+    border: none;
+    margin: 2em, none, none, none;
+}
+
+QWidget[cssClass="tarjeta_platillo"] {
+    border-radius: 4px;
+    border: 1px solid #E0E0E0;
+}
+
+QLabel[cssClass="etiqueta_nombre_platillos"] {
+    margin-top: 0.25em;
+    font-size: 13pt;
+}
+
+QLabel[cssClass="platillo_fuerte"] {
+    background-color: palevioletred;
+    border-radius: 1px;
+}
+
+QLabel[cssClass="bebida"] {
+    background-color: aliceblue;
+    border-radius: 1px;
+}
+
+QLabel[cssClass="etiqueta_formulario"] {
+    font-size: 13pt;
+}
+
+QLineEdit, QComboBox {
+    font-size: 13pt;
+}
