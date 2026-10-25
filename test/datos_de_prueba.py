@@ -25,11 +25,11 @@ def insumo_datos_prueba():
 @pytest.fixture
 def receta_datos_prueba():
     return [
-        Receta(1, "Pasta en salsa de tomate", "", 10),
-        Receta(2, "Puré de papas", "", 15),
-        Receta(3, "Filete de res", "", 2),
-        Receta(4, "Caldo de pollo", "", 20),
-        Receta(5, "Café", "", 40),
+        Receta(1, "Pasta en salsa de tomate", 10),
+        Receta(2, "Puré de papas", 15),
+        Receta(3, "Filete de res", 2),
+        Receta(4, "Caldo de pollo", 20),
+        Receta(5, "Café", 40),
     ]
 
 # @pytest.fixture
