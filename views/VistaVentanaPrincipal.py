@@ -11,6 +11,9 @@ class VistaVentanaPrincipal(QMainWindow):
     abrir_platillos_signal = Signal()
     abrir_menus_signal = Signal()
     abrir_ordenes_compra_signal = Signal()
+    abrir_inventario_signal = Signal()
+    abrir_merma_signal = Signal()
+    abrir_ventas_signal = Signal()
 
     def __init__(self):
         super().__init__()
@@ -42,10 +45,10 @@ class VistaVentanaPrincipal(QMainWindow):
         self.abrir_ordenes_compra_signal.emit()
 
     def emitir_mostrar_inventario(self):
-        pass
+        self.abrir_inventario_signal.emit()
 
     def emitir_mostrar_merma(self):
-        pass
+        self.abrir_merma_signal.emit()
 
     def emitir_mostrar_venta(self):
-        pass
+        self.abrir_ventas_signal.emit()

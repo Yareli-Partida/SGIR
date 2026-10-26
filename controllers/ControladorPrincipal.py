@@ -11,6 +11,9 @@ from controllers.ControladorListaMenus import ControladorListaMenus
 from controllers.ControladorListaOrdenesCompra import ControladorListaOrdenesCompra
 from controllers.ControladorCrearEditarPlatillo import ControladorCrearEditarPlatillo
 from controllers.ControladorPlatilloDetalles import ControladorPlatilloDetalles
+from controllers.ControladorTablaInventario import ControladorTablaInventario
+from controllers.ControladorTablaMerma import ControladorTablaMerma
+from controllers.ControladorTablaVentas import ControladorTablaVentas
 from models.Menu import Menu
 from models.OrdenCompra import OrdenCompra
 from models.Platillo import Platillo
@@ -31,6 +34,9 @@ from views.VistaMenuDetalles import VistaMenuDetalles
 from views.VistaListaOrdenesCompra import VistaListaOrdenesCompra
 from views.VistaCrearEditarOrdenCompra import VistaCrearEditarOrdenCompra
 from views.VistaOrdenesCompraDetalles import VistaOrdenesCompraDetalles
+from views.VistaTablaInventario import VistaTablaInventario
+from views.VistaTablaMerma import VistaTablaMerma
+from views.VistaTablaVentas import VistaTablaVentas
 
 from views.VistaVentanaPrincipal import VistaVentanaPrincipal
 
@@ -55,6 +61,9 @@ class ControladorPrincipal(QObject):
         self.vista.abrir_menus_signal.connect(self.mostrar_vista_menus)
         self.vista.abrir_ordenes_compra_signal.connect(self.mostrar_vista_ordenes_compra)
         self.vista.abrir_platillos_signal.connect(self.mostrar_vista_platillos)
+        self.vista.abrir_inventario_signal.connect(self.mostrar_vista_inventario)
+        self.vista.abrir_merma_signal.connect(self.mostrar_vista_merma)
+        self.vista.abrir_ventas_signal.connect(self.mostrar_vista_ventas)
 
     def mostrar_vista_home(self):
         self.vista.setCentralWidget(VistaHome())
@@ -234,3 +243,24 @@ class ControladorPrincipal(QObject):
         self.vista.setCentralWidget(vista_editar_orden_compra)
         vista_editar_orden_compra.obtener_insumos_signal.emit()
         vista_editar_orden_compra.llenar_forma_signal.emit(orden)
+
+    def mostrar_vista_inventario(self):
+        vista_tabla_inventario = VistaTablaInventario()
+
+        ControladorTablaInventario(vista_tabla_inventario)
+
+        self.vista.setCentralWidget(vista_tabla_inventario)
+
+    def mostrar_vista_merma(self):
+        vista_tabla_merma = VistaTablaMerma()
+
+        ControladorTablaMerma(vista_tabla_merma)
+
+        self.vista.setCentralWidget(vista_tabla_merma)
+
+    def mostrar_vista_ventas(self):
+        vista_tabla_ventas = VistaTablaVentas()
+
+        ControladorTablaVentas(vista_tabla_ventas)
+
+        self.vista.setCentralWidget(vista_tabla_ventas)
