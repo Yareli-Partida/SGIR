@@ -120,6 +120,7 @@ class VistaCrearEditarPlatillo(QWidget):
         self.campo_nueva_categoria.setFixedWidth(250)
 
         self.etiqueta_nueva_categoria = QLabel("Ingresa el nombre de la categoría: ")
+        self.etiqueta_nueva_categoria.setFixedWidth(int(self.etiqueta_nueva_categoria.sizeHint().width() * 1.5))
         self.etiqueta_nueva_categoria.setProperty("cssClass", "etiqueta_formulario")
 
         self.contenedor_nueva_categoria.layout().addWidget(self.etiqueta_nueva_categoria)
