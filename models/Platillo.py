@@ -1,7 +1,11 @@
 class Platillo:
-    def __init__(self, num, nombre):
+    def __init__(self, num, nombre, categoria=None, receta=None):
         self._num = num
         self._nombre = nombre
+
+
+        self._categoria = categoria
+        self._receta = categoria
 
     @property
     def num(self):
@@ -18,4 +22,20 @@ class Platillo:
     @nombre.setter
     def nombre(self, value):
         self._nombre = value
+
+    @property
+    def categoria(self):
+        return self._categoria
+
+    @categoria.setter
+    def categoria(self, value):
+        self._categoria = value
+    
+    @property
+    def receta(self):
+        return self._receta    
+
+    @receta.setter
+    def receta(self, value):
+        self._receta = value   
 
