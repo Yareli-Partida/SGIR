@@ -7,6 +7,9 @@ class Receta:
         #diccionario para las instrucciones {"numeroIntruccion":"instruccion"}
         self._instrucciones = instrucciones
 
+        #lista para almacenar los ingredientes de la receta
+        self._lista_ingredientes = []  
+
     @property
     def num(self):
         return self._num
@@ -39,11 +42,57 @@ class Receta:
     def instrucciones(self, value):
         self._instrucciones = value
 
+    @property
+    def lista_ingredientes(self):
+        return self._lista_ingredientes 
 
-'''EJEMPLO DE USO
+    @lista_ingredientes.setter
+    def lista_ingredientes(self, value):
+        self._lista_ingredientes = value
+
+    #metodo para agregar ingrediente a la receta, usando el submodelo IngredientesReceta
+    def agregarIngrediente(self, ingrediente, cantidad, unidad_medida):
+        nuevo_ingrediente = IngredientesReceta(ingrediente, cantidad, unidad_medida)
+        self._lista_ingredientes.append(nuevo_ingrediente)
+
+
+
+#Sub-clase para encapsular los ingredientes de la receta, puede llamarse tambien DetalleReceta.
+class IngredientesReceta:
+    def __init__(self, ingrediente, cantidad, unidad_medida):
+        self._ingrediente = ingrediente 
+        self._cantidad = cantidad
+        self._unidad_medida = unidad_medida
+
+
+    @property
+    def ingrediente(self):
+        return self._ingrediente
+
+    @property
+    def cantidad(self):
+        return self._cantidad
+
+    @property
+    def unidad_medida(self):
+        return self._unidad_medida
+
+
+
+
+from Ingrediente import Ingrediente
+#EJEMPLO DE USO
 receta1 = Receta(1, "Receta de Pizza", 4, {1: "Mezclar los ingredientes", 2: "Amasar la masa", 3: "Hornear la pizza"}) 
 
 for num, instruccion in receta1.instrucciones.items():
     print(f"Instrucción {num}: {instruccion}")
 
-'''
+Ingrediente1 = Ingrediente(1, "Harina")
+receta1.agregarIngrediente(Ingrediente1, 2, "taza")
+receta1.agregarIngrediente(Ingrediente(2, "Levadura"), 1, "cucharada")
+
+for ingrediente_receta in receta1._lista_ingredientes:
+    print('')
+    print('Ingrediente:', ingrediente_receta.ingrediente.nombre)
+    print('Cantidad:', ingrediente_receta.cantidad)
+    print('Unidad de Medida:', ingrediente_receta.unidad_medida)
