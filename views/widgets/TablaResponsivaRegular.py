@@ -21,7 +21,7 @@ class TablaResponsivaRegular(QTableWidget):
     def resizeEvent(self, event):
         contador_cols = self.columnCount()
 
-        ancho = (self.width() // contador_cols) - 1
+        ancho = ((self.width() - 18) // contador_cols) - 1
 
         for idx in range(contador_cols):
             self.setColumnWidth(idx, ancho)
