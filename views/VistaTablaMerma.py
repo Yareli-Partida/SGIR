@@ -24,7 +24,7 @@ class VistaTablaMerma(QWidget):
 
         self.setLayout(self.layout)
 
-        self.setStyleSheet((Path('views/styles/estilos_inventario.qss').read_text()))
+        self.setStyleSheet((Path('views/styles/estilos_merma.qss').read_text()))
 
     def configurar_tabla_merma(self):
         encabezados = ["Descripción", "Fecha", "Cantidad", "Unidad de medida", "Insumo", "Tipo de merma"]

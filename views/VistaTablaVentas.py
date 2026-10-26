@@ -24,7 +24,7 @@ class VistaTablaVentas(QWidget):
 
         self.setLayout(self.layout)
 
-        self.setStyleSheet((Path('views/styles/estilos_inventario.qss').read_text()))
+        self.setStyleSheet((Path('views/styles/estilos_ventas.qss').read_text()))
 
     def configurar_tabla_ventas(self):
         encabezados = ["Fecha", "Comensales", "Monto total", "Platillos"]
