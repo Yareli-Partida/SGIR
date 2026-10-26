@@ -29,7 +29,7 @@ class VistaTablaMerma(QWidget):
     def configurar_tabla_merma(self):
         encabezados = ["Descripción", "Fecha", "Cantidad", "Unidad de medida", "Insumo", "Tipo de merma"]
 
-        self.tabla_merma.setColumnCount(7)
+        self.tabla_merma.setColumnCount(6)
         self.tabla_merma.setHorizontalHeaderLabels(encabezados)
         self.tabla_merma.verticalHeader().show()
         self.tabla_merma.showGrid()
