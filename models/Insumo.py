@@ -1,5 +1,5 @@
 class Insumo:
-    def __init__(self, num, nombre, fecha_compra=None, fecha_caducidad=None, precio_unitario=None, umbral=None, stock=0, unidad_medida=None):
+    def __init__(self, num, nombre, fecha_compra=None, fecha_caducidad=None, precio_unitario=None, umbral=None, stock=0, unidad_medida=None, tipo_insumo=None, marca=None):
         self._num = num
         self._nombre = nombre
         self._fecha_compra = fecha_compra  
@@ -8,6 +8,10 @@ class Insumo:
         self._umbral = umbral 
         self._stock = stock
         self._unidad_medida = unidad_medida
+
+        #fks
+        self._tipo_insumo = tipo_insumo
+        self._marca = marca
 
     @property
     def num(self):
@@ -73,4 +77,29 @@ class Insumo:
     def unidad_medida(self, value):
         self._unidad_medida = value
 
+    @property
+    def tipo_insumo(self):
+        return self._tipo_insumo
 
+    @tipo_insumo.setter
+    def tipo_insumo(self, value):
+        self._tipo_insumo = value   
+
+    @property
+    def marca(self):
+        return self._marca
+
+    @marca.setter
+    def marca(self, value):
+        self._marca = value
+
+    
+
+'''
+from TipoInsumo import TipoInsumo
+from Marca import Marca
+
+tomate = Insumo(1, "Tomate Verde", fecha_compra="2023-10-01", fecha_caducidad="2023-10-15", precio_unitario=2.5, umbral=5, stock=10, unidad_medida="kg", tipo_insumo=TipoInsumo(1, "Vegetal"), marca=Marca(1, "Marca A"))
+print(tomate.stock)
+
+''' 
