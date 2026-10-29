@@ -1,5 +1,5 @@
 class Insumo:
-    def __init__(self, num, nombre, fecha_compra=None, fecha_caducidad=None, precio_unitario=None, umbral=None, stock=0, unidad_medida=None, tipo_insumo=None, marca=None):
+    def __init__(self, num, nombre, fecha_compra=None, fecha_caducidad=None, precio_unitario=0.0, umbral=0, stock=0, unidad_medida=None, tipo_insumo=None, marca=None):
         self._num = num
         self._nombre = nombre
         self._fecha_compra = fecha_compra  
