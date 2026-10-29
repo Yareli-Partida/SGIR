@@ -1,0 +1,1 @@
+#variables de entorno, configuraciones, constantes globales
