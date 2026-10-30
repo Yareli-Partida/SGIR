@@ -14,8 +14,8 @@ import shutil
 
 from rich.console import Console
 
-from VistaMenuPrincipal import VistaMenuPrincipal
-from ControladorMenuPrincipal import ControladorMenuPrincipal
+from views.VistaMenuPrincipal import VistaMenuPrincipal
+from controllers.ControladorMenuPrincipal import ControladorMenuPrincipal
 
 print('iniciando app...')
 
