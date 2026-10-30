@@ -1,5 +1,6 @@
 import subprocess
 import os
+import time
 
 from rich.layout import Layout
 from rich.panel import Panel
@@ -7,8 +8,8 @@ from rich.table import Table
 from rich.columns import Columns
 from rich.prompt import Prompt
 
-from models.Receta import Receta
-from VistaBase import VistaBase
+from models.receta import Receta, IngredientesReceta
+from views.VistaBase import VistaBase
 from views.clases_personalizadas.InputEmisor import InputEmisor
 
 class VistaRecetas(VistaBase):
@@ -50,8 +51,7 @@ class VistaRecetas(VistaBase):
         self.crear_banda_opciones_principal()
 
     def mostrar_todas_recetas(self):
-        if self.tabla_recetas.row_count > 0:
-            self.resetear_vista()
+        self.resetear_vista()
 
         self.layout["main"].update(self.tabla_recetas)
 
@@ -64,7 +64,7 @@ class VistaRecetas(VistaBase):
     def crear_elemento_tabla_recetas(self, receta:Receta):
         self.tabla_recetas.add_row(str(receta.num), receta.nombre)
 
-    def mostrar_detalles_receta(self, receta:Receta, lista_ingredientes=None, lista_instrucciones=None, datos_editados={}):
+    def mostrar_detalles_receta(self, receta:Receta, datos_editados, mapa_idx_ing):
         if self.tabla_ingredientes.row_count > 0 or self.tabla_instrucciones.row_count > 0:
             self.resetear_vista()
 
@@ -90,24 +90,63 @@ class VistaRecetas(VistaBase):
 
         panel.height = 7
 
+        if datos_editados and len(datos_editados["ingredientes"]):
+            ingredientes = datos_editados["ingredientes"][:]
+            self.llenar_tabla_ingredientes(receta.lista_ingredientes, mapa_idx_ing, ingredientes)
+        else:
+            self.llenar_tabla_ingredientes(receta.lista_ingredientes, mapa_idx_ing)
+
+        self.llenar_tabla_instrucciones(receta.instrucciones)
+
         self.layout["panel_receta"].update(panel)
         self.layout["tabla_ing"].update(self.tabla_ingredientes)
         self.layout["tabla_ins"].update(self.tabla_instrucciones)
 
-        # self.llenar_tabla_ingredientes(lista_ingredientes)
-        # self.llenar_tabla_instrucciones(lista_instrucciones)
-
     def configurar_tabla_ingredientes(self):
-        columnas = ["Nombre", "Cantidad", "Unidad de medida"]
+        columnas = ["#", "Nombre", "Cantidad", "Unidad de medida"]
         self.tabla_ingredientes.title = "Ingredientes"
         self.tabla_ingredientes.expand = True
 
         for col in columnas:
             self.tabla_ingredientes.add_column(col)
 
-    def llenar_tabla_ingredientes(self, lista_ingredientes):
+    def llenar_tabla_ingredientes(self, lista_ingredientes:list[IngredientesReceta], mapa_idx_ing:list, ing_editados=None):
+
         for ingrediente in lista_ingredientes:
-            self.tabla_ingredientes.add_row(ingrediente.nombre)
+            nombre_ing = ingrediente.ingrediente.nombre
+
+            idx_ing = [item for item in mapa_idx_ing if mapa_idx_ing[item] == nombre_ing][0]
+
+            if ing_editados:
+                # checa si un ing que fue agregado al dict de edición está en la lista original de ingredientes,
+                # lo que quiere decir que será editado, si es así entonces muestra el valor editado en vez del original
+                valor_editado = next(filter(lambda x: x["nombre"] == nombre_ing, ing_editados), None)
+
+                if valor_editado is not None:
+                    # sobreescribe ing editado (duplicado)
+                    ing_editados.remove(valor_editado)
+
+                    self.tabla_ingredientes.add_row(f"[bold red]{idx_ing}[/bold red]",
+                                                    f"[bold red]{nombre_ing}[/bold red]",
+                                                    f"[bold red]{valor_editado["cantidad"]}[/bold red]",
+                                                    f"[bold red]{valor_editado["unidad_m"]}[/bold red]")
+
+                    continue
+            # Agrega los ing ya existentes
+            self.tabla_ingredientes.add_row(str(idx_ing),
+                                            nombre_ing,
+                                            str(ingrediente.cantidad),
+                                            ingrediente.unidad_medida)
+
+        if ing_editados and len(ing_editados) > 0:
+            # agrega los ing nuevos
+            for ing in ing_editados:
+                idx_ing = [item for item in mapa_idx_ing if mapa_idx_ing[item] == ing["nombre"]][0]
+
+                self.tabla_ingredientes.add_row(f"[bold red]{idx_ing}[/bold red]",
+                                                f"[bold red]{ing["nombre"]}[/bold red]",
+                                                    f"[bold red]{ing["cantidad"]}[/bold red]",
+                                                    f"[bold red]{ing["unidad_m"]}[/bold red]")
 
     def configurar_tabla_instrucciones(self):
         columnas = ["#", "Instrucción"]
@@ -117,9 +156,9 @@ class VistaRecetas(VistaBase):
         for col in columnas:
             self.tabla_instrucciones.add_column(col)
 
-    def llenar_tabla_instrucciones(self, lista_instrucciones):
-        for instruccion in lista_instrucciones:
-            self.tabla_instrucciones.add_row(instruccion)
+    def llenar_tabla_instrucciones(self, lista_instrucciones:dict[str, str]):
+        for num, instruccion in lista_instrucciones.items():
+            self.tabla_instrucciones.add_row(str(num), instruccion)
 
     def crear_banda_opciones_principal(self):
         opciones_columna = Columns()
@@ -210,38 +249,133 @@ class VistaRecetas(VistaBase):
                                          choices=["1", "2", "m"],
                                          show_choices=False)
 
+        if self.input_menu_recetas.user_input is None:
+            self.refrescar_pantalla()
+            self.mostrar_menu_recetas_prompt()
+
     def mostrar_abrir_detalles_prompt(self, lista_recetas:list[Receta]):
         self.input_abrir_detalles.imprimir("Ingresa el índice de la receta a mostrar",
                                            choices=[str(receta.num) for receta in lista_recetas],
                                            show_choices=False)
+
+        if self.input_abrir_detalles.user_input is None:
+            self.refrescar_pantalla()
+            self.mostrar_abrir_detalles_prompt(lista_recetas)
 
     def mostrar_opciones_detalles_prompt(self):
         self.input_menu_detalles.imprimir("Selecciona una opción",
                                           choices=["1", "2", "m"],
                                           show_choices=False)
 
+        if self.input_menu_detalles.user_input is None:
+            self.refrescar_pantalla()
+            self.mostrar_opciones_detalles_prompt()
+
     def mostrar_opciones_editar_prompt(self):
         self.input_menu_editar_receta.imprimir("Selecciona una opción",
-                                               choices=["1", "2", "3", "4", "5", "6", "M"],
+                                               choices=["1", "2", "3", "4", "5", "6", "m"],
                                                show_choices=False)
 
+        if self.input_menu_editar_receta.user_input is None:
+            self.refrescar_pantalla()
+            self.mostrar_opciones_editar_prompt()
+
     def mostrar_editar_nombre_prompt(self):
-        return Prompt.ask("[bold red]Ingresa el nuevo nombre de la receta[/bold red]")
+        info = Prompt.ask("[bold yellow]Ingresa el nuevo nombre de la receta[/bold yellow]")
+
+        if len(info) > 0:
+            confirmacion = Prompt.ask(f"[bold yellow]Confirmar nuevo nombre[/bold yellow] "
+                                      f"[italic white]{info}[/italic white]", choices=["S", "N"])
+            if confirmacion == "S":
+                return info
+            else:
+                return None
+        else:
+            self.refrescar_pantalla()
+            self.mostrar_editar_nombre_prompt()
 
     def mostrar_editar_porciones_prompt(self):
-        return Prompt.ask("[bold red]Ingresa la nueva cantidad de porciones[/bold red]")
+        info = Prompt.ask("[bold yellow]Ingresa la nueva cantidad de porciones[/bold yellow]")
+
+        if len(info):
+            confirmacion = Prompt.ask(f"[bold yellow]Confirmar número de porciones[/bold yellow] "
+                                      f"[italic white]{info}[/italic white]", choices=["S", "N"])
+            if confirmacion == "S":
+                return info
+            else:
+                return None
+        else:
+            self.refrescar_pantalla()
+            self.mostrar_editar_porciones_prompt()
+
+    def mostrar_crear_ingrediente_prompt(self):
+        info = Prompt.ask("[bold yellow]Ingresa la sig. información separada por una coma: "
+                          "[bold white][Nombre de receta o insumo] [Cantidad] [Unidad de medida][/bold white]"
+                          "[/bold yellow]")
+
+        if len(info):
+            confirmacion = Prompt.ask(f"[bold yellow]Confirmar agregar ingrediente[/bold yellow] "
+                                      f"[italic white]{info}[/italic white]", choices=["S", "N"])
+            if confirmacion == "S":
+                return info
+            else:
+                return None
+        else:
+            self.refrescar_pantalla()
+            self.mostrar_crear_ingrediente_prompt()
+
+    def mostrar_modificar_ingrediente_prompt(self, opciones):
+        ing_idx = Prompt.ask("[bold yellow]Ingresa el número del ingrediente a modificar[/bold yellow]",
+                             choices=opciones,
+                             show_choices=False)
+        
+        info = Prompt.ask("[bold yellow]Ingresa la sig. información separada por una coma: "
+                          "[bold white][Cantidad] [Unidad de medida][/bold white]"
+                          "[/bold yellow]")
+
+        if len(info):
+            confirmacion = Prompt.ask(f"[bold yellow]Confirmar modificar[/bold yellow] "
+                                      f"[italic white]{info}[/italic white]", choices=["S", "N"])
+            if confirmacion == "S":
+                return ing_idx, info
+            else:
+                return None
+        else:
+            self.refrescar_pantalla()
+            self.mostrar_crear_ingrediente_prompt()
+
+    def mostrar_borrar_ingrediente_prompt(self, opciones):
+        info = Prompt.ask("[bold yellow]Ingresa el número del ingrediente a borrar[/bold yellow]",
+                          choices=opciones,
+                          show_choices=False)
+
+        if info is not None:
+            confirmacion = Prompt.ask(f"[bold yellow]Confirmar borrar ingrediente[/bold yellow] "
+                                      f"[italic white]#{info}[/italic white]", choices=["S", "N"])
+            if confirmacion == "S":
+                return info
+            else:
+                return None
 
     def mostrar_opciones_editar_ing_prompt(self):
         self.input_menu_editar_ing.imprimir("Selecciona una opción",
                                             choices=[str(i) for i in range(1, 5)],
                                             show_choices=False)
 
+        if self.input_menu_editar_ing.user_input is None:
+            self.refrescar_pantalla()
+            self.mostrar_opciones_editar_ing_prompt()
+
     def mostrar_opciones_editar_inst_prompt(self):
         self.input_menu_editar_inst.imprimir("Selecciona una opción",
                                              choices=[str(i) for i in range(1, 5)],
                                              show_choices=False)
 
-    def mostrar_layout(self):
+        if self.input_menu_editar_inst.user_input is None:
+            self.refrescar_pantalla()
+            self.mostrar_opciones_editar_inst_prompt()
+
+    def refrescar_pantalla(self):
         subprocess.run('cls' if os.name == 'nt' else 'clear')
         self.console.print(self.layout, justify="center")
 
