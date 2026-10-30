@@ -2,9 +2,9 @@ import os
 import subprocess
 import sys
 
-from ControladorRecetas import ControladorRecetas
-from VistaMenuPrincipal import VistaMenuPrincipal
-from VistaRecetas import VistaRecetas
+from controllers.ControladorRecetas import ControladorRecetas
+from views.VistaMenuPrincipal import VistaMenuPrincipal
+from views.VistaRecetas import VistaRecetas
 
 class ControladorMenuPrincipal:
     def __init__(self, vista: VistaMenuPrincipal, servicio=None):
@@ -23,7 +23,7 @@ class ControladorMenuPrincipal:
                 sys.exit()
 
     def evaluar_input_menu_recetas(self, seleccion:str):
-        if seleccion.lower() == "m":
+        if seleccion == "m" or seleccion == "M":
             self.abrir_menu_principal()
 
     def abrir_menu_principal(self):
