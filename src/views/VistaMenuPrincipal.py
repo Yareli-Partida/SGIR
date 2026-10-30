@@ -3,7 +3,7 @@ import subprocess
 
 from rich.table import Table
 
-from VistaBase import VistaBase
+from views.VistaBase import VistaBase
 from views.clases_personalizadas.InputEmisor import InputEmisor
 
 class VistaMenuPrincipal(VistaBase):
