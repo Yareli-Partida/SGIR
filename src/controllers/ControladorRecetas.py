@@ -108,10 +108,12 @@ class ControladorRecetas:
         self.mostrar_detalles_receta(self.vista.input_abrir_detalles.user_input)
 
     def cancelar_edicion_actual(self):
+        # resetea formulario y receta actual
         self.receta_actual = None
         self.formulario = {"ingredientes":[], "instrucciones":[], "item_borrado":False}
 
     def usuario_esta_editando(self):
+        # checa si el usuario ha hecho cambios desde que entró a la vista de detalles
         if (len(self.formulario["ingredientes"]) > 0
                 or len(self.formulario["instrucciones"]) > 0
                 or len(self.formulario.items()) > 3) or self.formulario["item_borrado"]:
@@ -122,12 +124,15 @@ class ControladorRecetas:
         lista_ing_editados_nombre = [ing["nombre"] for ing in self.formulario["ingredientes"]]
 
         if dict_ing["nombre"] in lista_ing_editados_nombre:
+            # checa si un ingrediente ya fue editado antes y remueve esa edicion para agregar la nueva
             obj = [ing for ing in self.formulario["ingredientes"] if ing["nombre"] == dict_ing["nombre"]][0]
             self.formulario["ingredientes"].remove(obj)
 
         self.formulario["ingredientes"].append(dict_ing)
 
     def mapear_ingredientes(self):
+        # toma los ingredientes de la receta y los potenciales ing de el formulario
+        # itera sobre cada uno y les asigna un número para mostrar en la tabla de la vista
         self.ing_idx = {}
         lista_ing = self.receta_actual.lista_ingredientes
 
@@ -144,6 +149,7 @@ class ControladorRecetas:
                     continue
                 else:
                     try:
+                        # encuentra el idx que sigue de acuerdo a los valores actuales
                         idx = int(list(self.ing_idx.keys())[-1]) + 1
                     except IndexError:
                         idx = 1
