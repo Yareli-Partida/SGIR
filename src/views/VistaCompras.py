@@ -73,12 +73,12 @@ class VistaCompras(VistaBase):
         self.layout["panel_menu"].size = 6
 
         panel = Panel(renderable=f"[bold yellow]Compra #{compra.num}\n"
-                                 f"Fecha de creación: {compra.fecha_creacion if compra.fecha_creacion else ""}\n"
+                                 f"[bold white]Fecha de creación:[/bold white] {compra.fecha_creacion if compra.fecha_creacion else ""}\n"
                                  f"{"[bold red]" if "total_bruto" in datos_editados else ""}"
-                                 f"Total bruto: {f"${compra.total_bruto}" if compra.total_bruto else ""}"
+                                 f"[bold white]Total bruto:[/bold white] {f"${compra.total_bruto}" if compra.total_bruto else ""}"
                                  f"{"[/bold red]" if "total_bruto" in datos_editados else ""}\n"
                                  f"{"[bold red]" if "proveedor" in datos_editados else ""}"
-                                 f"Proveedor: {compra.proveedor.nombre if compra.proveedor else ""}"
+                                 f"[bold white]Proveedor:[/bold white] {compra.proveedor.nombre if compra.proveedor else ""}"
                                  f"{"[/bold red]" if "proveedor" in datos_editados else ""}"
                                  f"[/bold yellow]")
 
