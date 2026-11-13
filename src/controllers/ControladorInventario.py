@@ -1,6 +1,7 @@
 import copy
 import datetime
 import math
+import time
 
 from models.compra import DetalleCompra
 from models.insumo import Insumo
@@ -22,12 +23,12 @@ class ControladorInventario:
         self.pagina_actual_lista_detalles = 1
 
         self.marcas_testeo = self.crear_marcas_testeo()
-        self.tipo_insumo_testeo = self.crear_tipos_insumo_testeo()
+        self.tipos_insumo_testeo = self.crear_tipos_insumo_testeo()
         self.insumos_testeo = self.crear_insumos_testeo()
 
         # esto era para testear paginado
         # for i in range(25):
-        #     self.insumos_testeo.append(Insumo(2, "Levadura", umbral=1, stock=6, tipo_insumo=self.tipo_insumo_testeo[1],
+        #     self.insumos_testeo.append(Insumo(2, "Levadura", umbral=1, stock=6, tipo_insumo=self.tipos_insumo_testeo[1],
         #                  marca=self.marcas_testeo[1]))
 
         self.detalle_compra_testeo = self.crear_detalle_compra_testeo()
@@ -70,9 +71,9 @@ class ControladorInventario:
         return [tipo1, tipo2]
 
     def crear_insumos_testeo(self):
-        insumo1 = Insumo(1, "Harina de Trigo", umbral=5, stock=10, tipo_insumo=self.tipo_insumo_testeo[0],
+        insumo1 = Insumo(1, "Harina de Trigo", umbral=5, stock=10, tipo_insumo=self.tipos_insumo_testeo[0],
                          marca=self.marcas_testeo[0])
-        insumo2 = Insumo(2, "Levadura", umbral=1, stock=6, tipo_insumo=self.tipo_insumo_testeo[1],
+        insumo2 = Insumo(2, "Levadura", umbral=1, stock=6, tipo_insumo=self.tipos_insumo_testeo[1],
                          marca=self.marcas_testeo[1])
 
         return [insumo1, insumo2]
@@ -215,9 +216,37 @@ class ControladorInventario:
                 self.mostrar_detalles_insumo()
 
             case "3":
+                # abre prompt para editar tipo de insumo
+                dict_tipo_insumo = {i + 1: self.tipos_insumo_testeo[i] for i in
+                                    range(len(self.tipos_insumo_testeo))}
+
+                opciones_tipo = [str(idx) for idx in dict_tipo_insumo]
+
+                self.vista.mostrar_tipos_insumo_disponibles(self.tipos_insumo_testeo)
+                self.vista.refrescar_pantalla()
+
+                tipo_num = self.vista.mostrar_editar_tipo_insumo_prompt(opciones_tipo)
+                tipo = None
+
+                # Aquí se desvía para crear un nuevo tipo de insumo
+                if tipo_num == "0":
+                    nuevo_tipo_nom = self.vista.mostrar_crear_tipo_insumo_prompt()
+                    tipo = TipoInsumo(nuevo_tipo_nom[:3], nuevo_tipo_nom)
+                    self.tipos_insumo_testeo.append(copy.deepcopy(tipo))
+                else:
+                    for idx, tipo_obj in dict_tipo_insumo.items():
+                        if idx == int(tipo_num):
+                            tipo = dict_tipo_insumo[idx]
+
+                if tipo:
+                    self.insumo_actual.tipo_insumo = tipo
+                    self.formulario["tipo_insumo"] = (copy.deepcopy(tipo))
+
+                self.mostrar_detalles_insumo()
+            case "4":
                 # llama a la función para guardar
                 self.guardar_editar_menu()
-            case "4":
+            case "5":
                 # cancela la edición actual y vuelve a detalles
                 if self.insumo_actual.num in [menu.num for menu in self.insumos_testeo]:
                     self.cancelar_edicion_actual()

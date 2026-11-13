@@ -12,6 +12,7 @@ from rich.prompt import Prompt
 
 from models.compra import DetalleCompra
 from models.insumo import Insumo
+from models.tipo_insumo import TipoInsumo
 from views.VistaBase import VistaBase
 from views.clases_personalizadas.InputEmisor import InputEmisor
 
@@ -150,8 +151,9 @@ class VistaInventario(VistaBase):
         opciones = ["[bold yellow]Opciones:[/bold yellow]",
                     "[1] Editar nombre",
                     "[2] Editar umbral",
-                    "[3] Guardar",
-                    "[4] Cancelar",
+                    "[3] Editar tipo de insumo",
+                    "[4] Guardar",
+                    "[5] Cancelar",
                     "[M] Volver al menú"]
 
         opciones_columna.expand = True
@@ -200,7 +202,7 @@ class VistaInventario(VistaBase):
 
     def mostrar_opciones_editar_prompt(self):
         self.input_menu_editar_inventario.imprimir("Selecciona una opción",
-                                                   choices=["1", "2", "3", "4", "m"],
+                                                   choices=["1", "2", "3", "4", "5", "m"],
                                                    show_choices=False)
 
         if self.input_menu_editar_inventario.user_input is None:
@@ -234,6 +236,48 @@ class VistaInventario(VistaBase):
         else:
             self.refrescar_pantalla()
             self.mostrar_editar_umbral_prompt()
+
+    def mostrar_tipos_insumo_disponibles(self, lista_tipos:list[TipoInsumo]):
+        columnas = ["#", "Nombre"]
+
+        tabla = Table(title="Tipos de insumo disponibles")
+
+        for col in columnas:
+            tabla.add_column(col)
+
+        if len(lista_tipos):
+            for i in range(len(lista_tipos)):
+                tabla.add_row(str(i+1), lista_tipos[i].nombre)
+        else:
+            tabla.add_row(" " * 10, " " * 10)
+
+        self.layout["tabla_detalles_insumo"].update(Align.center(tabla, vertical="middle"))
+
+    def mostrar_editar_tipo_insumo_prompt(self, opciones):
+        opciones.append("0")
+
+        tipo_ins = Prompt.ask("[bold yellow]Selecciona el tipo de insumo de entre las opciones o presiona 0 para crear un nuevo tipo[/bold yellow]",
+                              choices=opciones,
+                              show_choices=False)
+
+        confirmacion = Prompt.ask(f"[bold yellow]Confirmar selección de tipo de insumo[bold yellow]", choices=["S", "N"])
+
+        if confirmacion == "S":
+            return tipo_ins
+        return None
+
+    def mostrar_crear_tipo_insumo_prompt(self):
+        tipo_nombre = ""
+
+        while len(tipo_nombre) == 0:
+            self.refrescar_pantalla()
+            tipo_nombre = Prompt.ask("[bold yellow]Ingresa el nombre del nuevo tipo de insumo[/bold yellow]")
+
+        confirmacion = Prompt.ask(f"[bold yellow]Confirmar crear nuevo tipo de insumo: [italic white]{tipo_nombre}[/italic white][/bold yellow]", choices=["S", "N"])
+
+        if confirmacion == "S":
+            return tipo_nombre
+        return None
 
     def mostrar_prompt_crear_menu(self):
         nombre = Prompt.ask("Para comenzar, ingresa el nombre del nuevo menú o 0 para cancelar")
