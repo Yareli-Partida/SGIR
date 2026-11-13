@@ -1,6 +1,8 @@
 import subprocess
 import os
+import time
 
+import rich
 from rich.align import Align
 from rich.layout import Layout
 from rich.panel import Panel
@@ -29,10 +31,11 @@ class VistaInventario(VistaBase):
         self.input_abrir_detalles = InputEmisor()
         self.input_menu_detalles = InputEmisor()
         self.input_menu_editar_inventario = InputEmisor()
+        self.input_cambiar_pagina = InputEmisor()
 
-        self.layout["contenido"].split_column(Layout(name="main"), Layout(name="opciones"))
+        self.layout["contenido"].split_column(Layout(name="banda_pagina"), Layout(name="main"), Layout(name="opciones"))
 
-        self.mostrar_todos_insumos()
+        self.mostrar_todos_insumos(0, 0)
         self.crear_banda_opciones_principal()
 
     def resetear_vista(self):
@@ -45,10 +48,11 @@ class VistaInventario(VistaBase):
 
         self.crear_banda_opciones_principal()
 
-    def mostrar_todos_insumos(self):
+    def mostrar_todos_insumos(self, pag_actual:int, total_pag:int):
         self.resetear_vista()
 
         self.layout["main"].update(Align.center(self.tabla_inventario, vertical="top"))
+        self.mostrar_conteo_paginas(pag_actual, total_pag)
 
     def configurar_tabla_insumos(self):
         columnas = ["#", "Nombre", "Tipo de insumo", "Marca", "Umbral", "Stock", "Alerta"]
@@ -112,6 +116,7 @@ class VistaInventario(VistaBase):
         opciones = ["[bold yellow]Opciones:[/bold yellow]",
                     "[1] Ver detalles de insumo",
                     "[2] Filtrar búsqueda",
+                    "[3] Cambiar de página",
                     "[M] Volver al menú"]
 
         opciones_columna.expand = True
@@ -159,7 +164,7 @@ class VistaInventario(VistaBase):
 
     def mostrar_menu_insumos_prompt(self):
         self.input_menu_inventario.imprimir("Selecciona una opción",
-                                            choices=["1", "2", "m"],
+                                            choices=["1", "2", "3", "m"],
                                             show_choices=False)
 
         if self.input_menu_inventario.user_input is None:
@@ -241,6 +246,28 @@ class VistaInventario(VistaBase):
             return nombre
 
         return None
+
+    def mostrar_prompt_cambiar_pagina(self):
+        mov = self.input_cambiar_pagina.imprimir("[bold yellow]Ingresa [bold white]','[/bold white] para retroceder o [bold white]'.'[/bold white] para avanzar'[/bold yellow]", choices=[",", "."])
+        return mov
+
+    def mostrar_conteo_paginas(self, pag_actual, pag_total):
+        paginas_columna = Columns()
+        paginas = f"[bold magenta]Página {pag_actual}/{pag_total}[/bold magenta]"
+
+        paginas_columna.expand = True
+        self.layout["banda_pagina"].size = 1
+        paginas_columna.add_renderable(Align.center(paginas))
+
+        self.layout["banda_pagina"].update(paginas_columna)
+
+    def mostrar_mensaje_no_pagina_anterior(self):
+        rich.print("[bold green]Error: no hay página anterior")
+        time.sleep(2)
+
+    def mostrar_mensaje_no_pagina_siguiente(self):
+        rich.print("[bold green]Error: no hay página siguiente")
+        time.sleep(2)
 
     def refrescar_pantalla(self):
         try:

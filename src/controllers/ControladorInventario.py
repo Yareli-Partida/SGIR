@@ -1,8 +1,7 @@
 import copy
 import datetime
-import time
+import math
 
-from controllers.MonitorTeclado import MonitorTeclado
 from models.compra import DetalleCompra
 from models.insumo import Insumo
 from models.marca import Marca
@@ -26,16 +25,14 @@ class ControladorInventario:
         self.tipo_insumo_testeo = self.crear_tipos_insumo_testeo()
         self.insumos_testeo = self.crear_insumos_testeo()
 
-        for i in range(25):
-            self.insumos_testeo.append(Insumo(2, "Levadura", umbral=1, stock=6, tipo_insumo=self.tipo_insumo_testeo[1],
-                         marca=self.marcas_testeo[1]))
+        # esto era para testear paginado
+        # for i in range(25):
+        #     self.insumos_testeo.append(Insumo(2, "Levadura", umbral=1, stock=6, tipo_insumo=self.tipo_insumo_testeo[1],
+        #                  marca=self.marcas_testeo[1]))
 
         self.detalle_compra_testeo = self.crear_detalle_compra_testeo()
 
         self.configurar_listeners()
-
-        self.monitor_teclado = MonitorTeclado()
-        self.monitor_teclado.iniciar()
         self.mostrar_lista_insumos()
 
     def configurar_listeners(self):
@@ -43,6 +40,7 @@ class ControladorInventario:
         self.vista.input_abrir_detalles.agregar_escuchante(self.mostrar_detalles_insumo)
         self.vista.input_menu_detalles.agregar_escuchante(self.evaluar_seleccion_menu_detalles)
         self.vista.input_menu_editar_inventario.agregar_escuchante(self.evaluar_seleccion_menu_editar)
+        self.vista.input_cambiar_pagina.agregar_escuchante(self.cambiar_pagina_lista_inventario)
 
     def crear_detalle_compra_testeo(self):
         fecha1 = datetime.date.strptime("04-11-2027", "%d-%m-%Y")
@@ -83,9 +81,8 @@ class ControladorInventario:
         """
         Conecta con la capa de servicios para obtener la lista de insumos y crea un elemento de lista para cada una.
         """
-        hay_prox_pag = None
-
-        self.vista.mostrar_todos_insumos()
+        self.vista.mostrar_todos_insumos(self.pagina_actual_lista_inventario,
+                                         self.obtener_total_paginas(self.insumos_testeo))
 
         if lista_insumos is None:
             lista_insumos, hay_prox_pag = self.paginar_lista_inventario(self.insumos_testeo, self.pagina_actual_lista_inventario)
@@ -93,24 +90,10 @@ class ControladorInventario:
         for insumo in lista_insumos:
             self.vista.crear_elemento_tabla_insumos(insumo, alerta_stock=False)
 
-        if hay_prox_pag or self.pagina_actual_lista_inventario > 1 and self.monitor_teclado.escuchante is not self.cambiar_pagina_lista_inventario:
-            self.monitor_teclado.definir_escuchante(self.cambiar_pagina_lista_inventario)
-
-        if self.monitor_teclado.monitoreando is False:
-            self.monitor_teclado.iniciar()
-
         self.vista.refrescar_pantalla()
         self.vista.mostrar_menu_insumos_prompt()
 
     def mostrar_detalles_insumo(self, insumo_num=None):
-        try:
-            self.monitor_teclado.remover_escuchante(self.cambiar_pagina_lista_inventario)
-        except ValueError:
-            pass
-        finally:
-            # self.monitor_teclado.agregar_escuchante()
-            pass
-
         if self.insumo_actual is None:
             # Si no tenemos un insumo actual, busca el menú por el num pasado como arg
             # idealmente con un servicio pero por ahora uso un loop para testeo
@@ -177,12 +160,14 @@ class ControladorInventario:
             case "2":
                 # aquí debería haber filtros de búsqueda
                 pass
+            case "3":
+                self.vista.refrescar_pantalla()
+                self.vista.mostrar_prompt_cambiar_pagina()
             case "m":
                 # cancela la edicion actual antes de volver al menu principal
                 self.cancelar_edicion_actual()
 
     def evaluar_seleccion_menu_detalles(self, seleccion):
-        print(f"seleccion es {seleccion}")
         match seleccion:
             case "1":
                 # volver a la vista de todos los menus
@@ -209,7 +194,6 @@ class ControladorInventario:
                 self.cancelar_edicion_actual()
 
     def evaluar_seleccion_menu_editar(self, seleccion):
-        print(f"seleccion es {seleccion}")
         match seleccion:
             case "1":
                 # abre prompt para cambiar el nombre del insumo
@@ -246,21 +230,23 @@ class ControladorInventario:
                 self.cancelar_edicion_actual()
 
     def cambiar_pagina_lista_inventario(self, mov):
-        if mov == "left":
+        if mov == ",":
             if self.pagina_actual_lista_inventario == 1:
-                return
+                self.vista.mostrar_mensaje_no_pagina_anterior()
+                self.mostrar_lista_insumos()
             else:
                 self.pagina_actual_lista_inventario -= 1
                 pagina, hay_sig_pag = self.paginar_lista_inventario(self.insumos_testeo, self.pagina_actual_lista_inventario)
-                self.monitor_teclado.detener()
                 self.mostrar_lista_insumos(pagina)
 
-        elif mov == "right":
+        elif mov == ".":
             pagina, sig_pag  = self.paginar_lista_inventario(self.insumos_testeo, self.pagina_actual_lista_inventario)
-            if sig_pag:
+            if sig_pag is False:
+                self.vista.mostrar_mensaje_no_pagina_siguiente()
+                self.mostrar_lista_insumos()
+            else:
                 self.pagina_actual_lista_inventario += 1
                 pagina, hay_sig_pag = self.paginar_lista_inventario(self.insumos_testeo, self.pagina_actual_lista_inventario)
-                self.monitor_teclado.detener()
                 self.mostrar_lista_insumos(pagina)
 
     def paginar_lista_inventario(self, items: list, num_pag: int):
@@ -278,3 +264,11 @@ class ControladorInventario:
             prox_pag = False
 
         return items[idx_inicio:idx_final], prox_pag
+
+    def obtener_total_paginas(self, items: list):
+        consola_size = self.vista.console.size[1]
+        size_sin_prompt = consola_size - 6
+
+        lineas_disp = size_sin_prompt - 7
+
+        return math.ceil(len(items) / lineas_disp)
