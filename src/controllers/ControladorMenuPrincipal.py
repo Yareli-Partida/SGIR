@@ -1,6 +1,5 @@
 import os
 import subprocess
-import sys
 
 from controllers.ControladorCompras import ControladorCompras
 from controllers.ControladorInventario import ControladorInventario
@@ -9,6 +8,7 @@ from controllers.ControladorMerma import ControladorMerma
 from controllers.ControladorPlatillos import ControladorPlatillos
 from controllers.ControladorRecetas import ControladorRecetas
 from controllers.ControladorVentas import ControladorVentas
+from controllers.MonitorTeclado import MonitorTeclado
 from views.VistaCompras import VistaCompras
 from views.VistaInventario import VistaInventario
 from views.VistaMenuPrincipal import VistaMenuPrincipal
@@ -24,6 +24,7 @@ class ControladorMenuPrincipal:
         self.vista = vista
         self.servicio = servicio
         self.vista.input_menu.agregar_escuchante(self.evaluar_input_menu)
+        self.monitor_teclado = MonitorTeclado()
 
         self.abrir_menu_principal()
 
@@ -48,10 +49,12 @@ class ControladorMenuPrincipal:
                     subprocess.run('cls' if os.name == 'nt' else 'clear')
                 except FileNotFoundError:
                     print(chr(27) + "[2J")
-                sys.exit()
+                finally:
+                    os._exit(0)
 
     def evaluar_redirigir_menu_principal(self, seleccion:str):
         if seleccion == "m" or seleccion == "M":
+            self.monitor_teclado.detener()
             self.abrir_menu_principal()
 
     def abrir_menu_principal(self):
