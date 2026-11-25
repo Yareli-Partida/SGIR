@@ -81,8 +81,8 @@ class VistaMenus(VistaBase):
         else:
             vigencia_menu = "N/A"
 
-        panel = Panel(renderable=f"{f"[bold yellow]{f"ID #{menu.num}: " if menu and menu.num != 0 else ""}[/bold yellow]"
-                                    f"[bold red]" if "nombre" in datos_editados else "[bold yellow]"}"
+        panel = Panel(renderable=f"[bold white]Menú #{menu.num if menu and menu.num != 0 else "-"}: [/bold white]"
+                                    f"{"[bold red]" if "nombre" in datos_editados else "[bold yellow]"}"
                                  f"{nombre_menu}\n"
                                  f"{"[/bold red]" if "nombre" in datos_editados else "[/bold yellow]"}"
                                  f"{"[bold red]" if "vigencia" in datos_editados else "[yellow]"}"
