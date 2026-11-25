@@ -350,7 +350,7 @@ class VentaDAO:
 
                         # esto quiere decir que los ingredientes son basados en receta, lo que requiere
                         # de otro loop para descontar cada insumo de la receta del ingrediente
-                        if nombre_insumo is None:
+                        if ing_detalle.ingrediente.insumo:
                             sql_ingredientes_rec_ing = '''
                                   SELECT
                                          li.cantidad     cantidad,
@@ -418,56 +418,56 @@ class VentaDAO:
                                     else:
                                         # no hubo resultados del query
                                         raise ValueError(f"Error: No hay insumos disponibles para completar la venta")
+                        else:
+                            # se dividen la cant de los ingredientes entre la cantidad de porciones que rinde la receta
+                            # para ver cuánto se gasta por cada platillo, se divide entre la porción usada
+                            # y se multiplica por la cantidad de platillos vendida
+                            cant_platillos = consumo.cantidad_platillos
+                            cantidad_ing = float(ing_detalle.cantidad) / int(ing_detalle.ingrediente.receta.num_porciones)
+                            cantidad_a_descontar = (cantidad_ing / consumo.platillo.receta.num_porciones) * cant_platillos
+                            unidad_medida = ing_detalle.unidad_medida
 
-                        # se dividen la cant de los ingredientes entre la cantidad de porciones que rinde la receta
-                        # para ver cuánto se gasta por cada platillo, se divide entre la porción usada
-                        # y se multiplica por la cantidad de platillos vendida
-                        cant_platillos = consumo.cantidad_platillos
-                        cantidad_ing = float(ing_detalle.cantidad) / int(ing_detalle.ingrediente.receta.num_porciones)
-                        cantidad_a_descontar = (cantidad_ing / consumo.platillo.receta.num_porciones) * cant_platillos
-                        unidad_medida = ing_detalle.unidad_medida
+                            while cantidad_a_descontar != 0:
+                                # checa el stock del insumo
+                                sql_detalle_compra = '''
+                                                     SELECT ins.num        insNum,
+                                                            compra         com,
+                                                            cantidadActual cantAct,
+                                                            unidadMedida   unidad
+                                                     FROM lista_compra li
+                                                              INNER JOIN insumo ins on ins.num = li.insumo
+                                                     WHERE ins.nombre = %s
+                                                     ORDER BY fechaCaducidad;
+                                                     '''
+                                cursor.execute(sql_detalle_compra, (nombre_insumo,))
+                                res = cursor.fetchall()[0]
 
-                        while cantidad_a_descontar != 0:
-                            # checa el stock del insumo
-                            sql_detalle_compra = '''
-                                                 SELECT ins.num        insNum,
-                                                        compra         com,
-                                                        cantidadActual cantAct,
-                                                        unidadMedida   unidad
-                                                 FROM lista_compra li
-                                                          INNER JOIN insumo ins on ins.num = li.insumo
-                                                 WHERE ins.nombre = %s
-                                                 ORDER BY fechaCaducidad;
-                                                 '''
-                            cursor.execute(sql_detalle_compra, (nombre_insumo,))
-                            res = cursor.fetchall()[0]
+                                if res:
+                                    # convierte la cantidad del ingrediente a la cantidad para la unidad de medida del insumo
+                                    cantidad_a_descontar = conversor.convertir(cantidad_a_descontar, unidad_medida, (res['unidad']))
+                                    cantidad_actual = float(res['cantAct'])
 
-                            if res:
-                                # convierte la cantidad del ingrediente a la cantidad para la unidad de medida del insumo
-                                cantidad_a_descontar = conversor.convertir(cantidad_a_descontar, unidad_medida, (res['unidad']))
-                                cantidad_actual = float(res['cantAct'])
+                                    if cantidad_actual >= cantidad_a_descontar:
+                                        # el detalle de compra tiene stock suficiente, descuenta la cant actual y la cantidad restante a descontar se pone en 0
+                                        cantidad_actual -= cantidad_a_descontar
+                                        cantidad_a_descontar = 0
+                                    else:
+                                        # el detalle de compra no tiene stock suficiente, se descuenta la cant actual a lo que resta de la cantidad
+                                        # y actualiza la cant act a 0
+                                        cantidad_a_descontar -= cantidad_actual
+                                        cantidad_actual = 0
 
-                                if cantidad_actual >= cantidad_a_descontar:
-                                    # el detalle de compra tiene stock suficiente, descuenta la cant actual y la cantidad restante a descontar se pone en 0
-                                    cantidad_actual -= cantidad_a_descontar
-                                    cantidad_a_descontar = 0
+                                    sql_actualiza_stock = '''
+                                                          UPDATE lista_compra
+                                                          SET cantidadActual = %s
+                                                          WHERE insumo = %s
+                                                            and compra = %s;
+                                                          '''
+
+                                    cursor.execute(sql_actualiza_stock, (cantidad_actual, res['insNum'], res['com']))
                                 else:
-                                    # el detalle de compra no tiene stock suficiente, se descuenta la cant actual a lo que resta de la cantidad
-                                    # y actualiza la cant act a 0
-                                    cantidad_a_descontar -= cantidad_actual
-                                    cantidad_actual = 0
-
-                                sql_actualiza_stock = '''
-                                                      UPDATE lista_compra
-                                                      SET cantidadActual = %s
-                                                      WHERE insumo = %s
-                                                        and compra = %s;
-                                                      '''
-
-                                cursor.execute(sql_actualiza_stock, (cantidad_actual, res['insNum'], res['com']))
-                            else:
-                                # no hubo resultados del query
-                                raise ValueError(f"Error: No hay insumos disponibles para completar la venta")
+                                    # no hubo resultados del query
+                                    raise ValueError(f"Error: No hay insumos disponibles para completar la venta")
                 connection.commit()
 
         except mysql.connector.Error as err:
