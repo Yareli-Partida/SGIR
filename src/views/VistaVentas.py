@@ -294,7 +294,7 @@ class VistaVentas(VistaBase):
                                         choices=["1", "2", "3", "m", ",", "."],
                                         show_choices=False)
 
-        if self.input_menu_ventas.user_input is None:
+        if self.input_menu_ventas.user_input is None or self.input_menu_ventas.user_input == "," or self.input_menu_ventas.user_input == ".":
             self.refrescar_pantalla()
             self.mostrar_menu_ventas_prompt()
 
@@ -321,7 +321,7 @@ class VistaVentas(VistaBase):
                                          choices=["1", "2", "3", ",", "."],
                                          show_choices=False)
 
-        if self.input_menu_detalles.user_input is None:
+        if self.input_menu_detalles.user_input is None or self.input_menu_detalles.user_input == "." or self.input_menu_detalles.user_input == ",":
             self.refrescar_pantalla()
             self.mostrar_opciones_detalles_prompt()
 
@@ -339,7 +339,7 @@ class VistaVentas(VistaBase):
                                         choices=["1", "2", "3", "4", "5", "m", ",", "."],
                                         show_choices=False)
 
-        if self.input_menu_editar.user_input is None:
+        if self.input_menu_editar.user_input is None or self.input_menu_editar.user_input == "." or self.input_menu_editar.user_input == ",":
             self.refrescar_pantalla()
             self.mostrar_opciones_editar_prompt()
 
@@ -348,7 +348,7 @@ class VistaVentas(VistaBase):
                                         choices=["1", "2", "3", "4", ",", "."],
                                         show_choices=False)
 
-        if self.input_menu_editar.user_input is None:
+        if self.input_menu_editar.user_input is None or self.input_menu_editar.user_input == "." or self.input_menu_editar.user_input == ",":
             self.refrescar_pantalla()
             self.mostrar_opciones_editar_prompt()
 
