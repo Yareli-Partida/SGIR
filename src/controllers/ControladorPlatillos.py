@@ -58,7 +58,7 @@ class ControladorPlatillos:
         else:
             consola_size = self.vista.console.size[1]
             size_sin_prompt = consola_size - 6
-            lineas_disp = size_sin_prompt - 6
+            lineas_disp = size_sin_prompt - 9
 
             idx_ui = (self.pagina_actual_lista_platillos - 1) * lineas_disp
 
@@ -482,11 +482,11 @@ class ControladorPlatillos:
         consola_size = self.vista.console.size[1]
         size_sin_prompt = consola_size - 6
 
-        lineas_disp = size_sin_prompt - 7
+        lineas_disp = size_sin_prompt - 9
 
         total = math.ceil(len(items) / lineas_disp)
 
-        if len(items):
+        if len(items) == 0:
             return 1
 
         return total
@@ -499,7 +499,7 @@ class ControladorPlatillos:
 
         total = math.ceil(len(items) / lineas_disp)
 
-        if len(items):
+        if len(items) == 0:
             return 1
 
         return total
