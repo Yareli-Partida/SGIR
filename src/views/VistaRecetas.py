@@ -84,7 +84,8 @@ class VistaRecetas(VistaBase):
 
         self.layout["panel_receta"].size = 3
 
-        panel = Panel(renderable=f"{"[bold red]" if "nombre" in datos_editados else "[bold yellow]"}"
+        panel = Panel(renderable=f"[bold white]Receta #{receta.num if receta and receta.num != 0 else "-"}: [/bold white]"
+                                 f"{"[bold red]" if "nombre" in datos_editados else "[bold yellow]"}"
                                  f"{receta.nombre}"
                                  f"{"[/bold red]" if "nombre" in datos_editados else "[/bold yellow]"}: "
                                  f"{"[bold red]" if "porciones" in datos_editados else "[italic yellow]"}"
