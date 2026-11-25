@@ -133,7 +133,7 @@ class ControladorVentas:
                 self.mostrar_detalles_venta()
             else:
                 self.mostrar_detalles_venta()
-        except ValueError:
+        except ValueError, AttributeError:
             self.vista.mostrar_error_venta_stock_insuficiente()
             self.mostrar_detalles_venta()
 
