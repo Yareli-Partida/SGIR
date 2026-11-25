@@ -386,7 +386,7 @@ class ControladorPlatillos:
         consola_size = self.vista.console.size[1]
         size_sin_prompt = consola_size - 6
 
-        lineas_disp = size_sin_prompt - 7
+        lineas_disp = size_sin_prompt - 9
 
         idx_inicio = (num_pag - 1) * lineas_disp
         idx_final = idx_inicio + lineas_disp
