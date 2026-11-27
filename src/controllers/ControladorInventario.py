@@ -15,6 +15,7 @@ class ControladorInventario:
         self.insumo_actual = None
         self.detalles_insumo_actual = []
         self.formulario = {}
+        self.ultimo_param_busqueda = None
 
         self.pagina_actual_lista_inventario = 1
         self.pagina_actual_lista_detalles = 1
@@ -40,16 +41,20 @@ class ControladorInventario:
         self.vista.input_seleccion_tipo_insumo.agregar_escuchante(self.cambiar_pagina_lista_tipos_insumo)
         self.vista.input_seleccion_marca.agregar_escuchante(self.cambiar_pagina_lista_marcas)
 
-    def mostrar_lista_insumos(self, lista_insumos=None):
+    def mostrar_lista_insumos(self, lista_insumos=None, codigo_busqueda=0):
         """
         Conecta con la capa de servicios para obtener la lista de insumos y crea un elemento de lista para cada una.
         """
 
+        # Agregué un param de código de búsqueda para mostrar una tabla distinta a la normal de todos los insumo
+        # por ejemplo, si pasa el código 1 es porque vamos a mostrar resultados de búsqueda por tipo y vamos a
+        # mostrar una tabla SIN la columna de tipo para que no se repita
+
         if self.insumos_a_mostrar is None:
             self.insumos_a_mostrar = self.servicio.obtener_insumos()
 
-        self.vista.mostrar_todos_insumos(self.pagina_actual_lista_inventario,
-                                         self.obtener_total_paginas_lista_inventario(self.insumos_a_mostrar))
+        self.vista.mostrar_todos_insumos(self.pagina_actual_lista_inventario, self.obtener_total_paginas_lista_inventario(self.insumos_a_mostrar),
+                                         codigo_busqueda, self.ultimo_param_busqueda)
 
         if lista_insumos is None:
             lista_insumos, hay_prox_pag = self.paginar_lista_inventario(self.insumos_a_mostrar, self.pagina_actual_lista_inventario)
@@ -70,8 +75,12 @@ class ControladorInventario:
             else:
                 stock_bajo = True
 
-            idx_ui += 1
-            self.vista.crear_elemento_tabla_insumos(insumo, alerta_stock=stock_bajo, idx=idx_ui)
+            if codigo_busqueda == 0:
+                idx_ui += 1
+                self.vista.crear_elemento_tabla_insumos(insumo, alerta_stock=stock_bajo, idx=idx_ui)
+            elif codigo_busqueda == 1:
+                idx_ui += 1
+                self.vista.crear_elemento_tabla_por_tipo(insumo, alerta_stock=stock_bajo, idx=idx_ui)
 
         self.vista.refrescar_pantalla()
         self.vista.mostrar_menu_insumos_prompt()
@@ -213,7 +222,8 @@ class ControladorInventario:
                     self.vista.mostrar_mensaje_no_resultados_busqueda_av()
                     self.vista.refrescar_pantalla()
 
-                self.mostrar_lista_insumos()
+                self.ultimo_param_busqueda = dict_tipo_insumo[int(tipo_num)].nombre
+                self.mostrar_lista_insumos(codigo_busqueda=1)
 
             case "3":
                 # buscar por marca

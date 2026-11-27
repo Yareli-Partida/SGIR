@@ -29,6 +29,9 @@ class VistaInventario(VistaBase):
         self.tabla_detalles = Table(title="Detalles")
         self.configurar_tabla_detalles()
 
+        self.tabla_busqueda_por_tipo = Table()
+        self.configurar_tabla_insumos_por_tipo()
+
         self.input_menu_inventario = InputEmisor()
         self.input_abrir_detalles = InputEmisor()
         self.input_menu_detalles = InputEmisor()
@@ -52,10 +55,14 @@ class VistaInventario(VistaBase):
 
         self.crear_banda_opciones_principal()
 
-    def mostrar_todos_insumos(self, pag_actual:int, total_pag:int):
+    def mostrar_todos_insumos(self, pag_actual:int, total_pag:int, codigo_busqueda=0, param_busqueda=None):
         self.resetear_vista()
 
-        self.layout["main"].update(Align.center(self.tabla_inventario, vertical="top"))
+        if codigo_busqueda == 0:
+            self.layout["main"].update(Align.center(self.tabla_inventario, vertical="top"))
+        elif codigo_busqueda == 1:
+            self.tabla_busqueda_por_tipo.title = f"Resultados de búsqueda por tipo: {param_busqueda}"
+            self.layout["main"].update(Align.center(self.tabla_busqueda_por_tipo, vertical="top"))
         self.mostrar_conteo_paginas(pag_actual, total_pag)
 
     def configurar_tabla_insumos(self):
@@ -72,6 +79,21 @@ class VistaInventario(VistaBase):
 
         self.tabla_inventario.add_row(str(idx), insumo.nombre, insumo.tipo_insumo.nombre,
                                       insumo.marca.nombre,str(insumo.umbral), str(insumo.stock), celda_alerta)
+
+    def configurar_tabla_insumos_por_tipo(self):
+        columnas = ["#", "Nombre", "Marca", "Umbral", "Stock (kg/lt)", "Alerta"]
+
+        for columna in columnas:
+            self.tabla_busqueda_por_tipo.add_column(columna)
+
+    def crear_elemento_tabla_por_tipo(self, insumo: Insumo, alerta_stock:bool, idx:int):
+        if alerta_stock:
+            celda_alerta = "[bold red]:warning: Stock bajo[/bold red]"
+        else:
+            celda_alerta = ""
+
+        self.tabla_busqueda_por_tipo.add_row(str(idx), insumo.nombre, insumo.marca.nombre, str(insumo.umbral),
+                                      str(insumo.stock), celda_alerta)
 
     def mostrar_detalles_insumo(self, insumo: Insumo | None, pag_actual, total_pag, lista_detalles:list[DetalleCompra], datos_editados):
         self.resetear_vista()
