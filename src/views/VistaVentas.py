@@ -188,6 +188,7 @@ class VistaVentas(VistaBase):
 
     def mostrar_registrar_venta(self, venta:Venta | None, mapa_idx):
         self.resetear_vista()
+        self.mostrar_conteo_paginas(1, 1)
 
         self.layout["main"].split_column(Layout(name="panel_venta"), Layout(name="tabla_consumo"))
 

@@ -305,7 +305,7 @@ class VistaCompras(VistaBase):
         self.layout["tabla_detalles_compra"].update(Align.center(tabla, vertical="middle"))
 
     def mostrar_crear_registro_compra(self, compra: Compra | None, insumo_idx):
-        self.mostrar_conteo_paginas(0, 0)
+        self.mostrar_conteo_paginas(1, 1)
         self.resetear_vista()
 
         self.layout["main"].split_column(Layout(name="panel_menu"), Layout(name="tabla_detalles_compra"))

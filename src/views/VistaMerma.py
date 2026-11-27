@@ -214,7 +214,7 @@ class VistaMerma(VistaBase):
 
     def mostrar_registrar_merma(self, merma: Merma | None):
         self.resetear_vista()
-
+        self.mostrar_conteo_paginas(1, 1)
         self.layout["main"].split_column(Layout(name="panel_merma"), Layout(name="tabla_detalles"))
 
         self.layout["panel_merma"].size = 5
