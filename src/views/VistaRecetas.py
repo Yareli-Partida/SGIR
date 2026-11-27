@@ -99,7 +99,7 @@ class VistaRecetas(VistaBase):
             self.llenar_tabla_ingredientes(pagina_detalles["lista_ingredientes"], mapa_idx_ing, datos_editados["ingredientes"])
 
         if receta and len(pagina_detalles["instrucciones"]):
-            self.llenar_tabla_instrucciones(pagina_detalles["instrucciones"])
+            self.llenar_tabla_instrucciones(pagina_detalles["instrucciones"], datos_editados["instrucciones"])
 
         self.layout["panel_receta"].update(panel)
         self.layout["tabla_ing"].update(self.tabla_ingredientes)
@@ -140,9 +140,12 @@ class VistaRecetas(VistaBase):
         for col in columnas:
             self.tabla_instrucciones.add_column(col)
 
-    def llenar_tabla_instrucciones(self, lista_instrucciones:dict[str, str]):
+    def llenar_tabla_instrucciones(self, lista_instrucciones:dict[str, str], inst_editadas:list[dict]):
+        lista_llaves = [list(val.keys())[0] for val in inst_editadas]
+
         for num, instruccion in lista_instrucciones.items():
-            self.tabla_instrucciones.add_row(str(num), instruccion)
+            self.tabla_instrucciones.add_row(f"{"[bold red]" if num in lista_llaves else ""}{str(num)}"
+                                             , f"{"[bold red]" if num in lista_llaves else ""}{instruccion}")
 
     def mostrar_crear_receta(self, receta:Receta|None, mapa_idx_ing):
         self.resetear_vista()
@@ -163,7 +166,7 @@ class VistaRecetas(VistaBase):
             self.llenar_tabla_ingredientes(receta.lista_ingredientes, mapa_idx_ing)
 
         if receta:
-            self.llenar_tabla_instrucciones(receta.instrucciones)
+            self.llenar_tabla_instrucciones(receta.instrucciones, [])
 
         self.layout["panel_receta"].update(panel)
         self.layout["opciones"].update(Columns())
