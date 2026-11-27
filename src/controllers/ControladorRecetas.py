@@ -525,8 +525,8 @@ class ControladorRecetas:
                     else:
                         idx = 1
 
-                    self.receta_actual.instrucciones[idx] = resultado_val_instruccion[1]
-                    self.agregar_edicion_instruccion({idx:resultado_val_instruccion[1]})
+                    self.receta_actual.instrucciones[int(idx)] = resultado_val_instruccion[1]
+                    self.agregar_edicion_instruccion({int(idx):resultado_val_instruccion[1]})
                 self.mostrar_detalles_receta()
 
             case "2":
@@ -545,7 +545,7 @@ class ControladorRecetas:
                             resultado_val_instruccion = self.validador.validar_crear_instruccion(instruccion)
 
                     self.receta_actual.instrucciones[int(idx)] = instruccion
-                    self.agregar_edicion_instruccion({idx:instruccion})
+                    self.agregar_edicion_instruccion({int(idx):instruccion})
 
                 self.mostrar_detalles_receta()
 
