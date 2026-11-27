@@ -746,12 +746,13 @@ class VistaCompras(VistaBase):
                                    choices=opciones,
                                    show_choices=False)
 
-            confirmacion = Prompt.ask(f"[bold yellow]Confirmar selección de marca[/bold yellow]", choices=["S", "N"])
+            if not len(marca_num) == 0 and not marca_num == "," and not marca_num == ".":
+                confirmacion = Prompt.ask(f"[bold yellow]Confirmar selección de marca[/bold yellow]", choices=["S", "N"])
 
-            if confirmacion == "S":
-                return marca_num
-            else:
-                marca_nom = ""
+                if confirmacion == "S":
+                    return marca_num
+                else:
+                    marca_nom = ""
 
     def mostrar_crear_marca_prompt(self):
         marca_nom = ""
@@ -780,12 +781,13 @@ class VistaCompras(VistaBase):
                                   choices=opciones,
                                   show_choices=False)
 
-            confirmacion = Prompt.ask(f"[bold yellow]Confirmar selección de tipo de insumo[bold yellow]", choices=["S", "N"])
+            if not len(tipo_ins) == 0 and not tipo_ins == "," and not tipo_ins == ".":
+                confirmacion = Prompt.ask(f"[bold yellow]Confirmar selección de tipo de insumo[bold yellow]", choices=["S", "N"])
 
-            if confirmacion == "S":
-                return tipo_ins
-            else:
-                tipo_ins = ""
+                if confirmacion == "S":
+                    return tipo_ins
+                else:
+                    tipo_ins = ""
 
     def mostrar_crear_tipo_insumo_prompt(self):
         tipo_nombre = ""
