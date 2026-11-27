@@ -61,10 +61,13 @@ class VistaMerma(VistaBase):
         self.mostrar_conteo_paginas(pag_actual, total_pag)
 
     def configurar_tabla_merma(self):
-        columnas = ["#", "Fecha", "Cantidad", "Unidad de medida", "Insumo", "Tipo de merma"]
+        columnas = ["#", "Fecha", "Cantidad", "Unidad de medida", "Insumo", "Tipo de merma", "Descripción"]
 
         for columna in columnas:
-            self.tabla_merma.add_column(columna)
+            if columna == "Descripción":
+                self.tabla_merma.add_column(columna, no_wrap=False)
+            else:
+                self.tabla_merma.add_column(columna)
 
     def configurar_tabla_detalles(self):
         columnas = ["Fuente", "Cantidad", "Unidad de medida", "Descripción"]
@@ -74,7 +77,7 @@ class VistaMerma(VistaBase):
 
     def crear_elemento_tabla_merma(self, merma: Merma, idx_ui:int):
         self.tabla_merma.add_row(str(merma.num), self._formatear_fecha(merma.fecha), str(merma.cantidad),
-                                 merma.unidad_medida, merma.insumo.nombre, merma.tipo_merma.nombre)
+                                 merma.unidad_medida, merma.insumo.nombre, merma.tipo_merma.nombre, merma.descripcion)
 
     @staticmethod
     def _formatear_fecha(fecha) -> str:
