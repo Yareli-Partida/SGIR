@@ -166,7 +166,7 @@ class VistaRecetas(VistaBase):
             self.llenar_tabla_ingredientes(receta.lista_ingredientes, mapa_idx_ing)
 
         if receta:
-            self.llenar_tabla_instrucciones(receta.instrucciones)
+            self.llenar_tabla_instrucciones(receta.instrucciones, [])
 
         self.layout["panel_receta"].update(panel)
         self.layout["opciones"].update(Columns())
